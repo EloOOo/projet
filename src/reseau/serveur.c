@@ -7,6 +7,7 @@
 #include "fonctionsSocket.h"
 #include "fonctionsServeur.h"
 
+
 main(int argc, char** argv) {
     int sockConx, 
         sockTransJ1,    
@@ -49,43 +50,71 @@ main(int argc, char** argv) {
     repPartJ2 =remplieRepPartieClient(0,reqPartieJ2,reqPartieJ1);
     
     //envoie reponse partie au joueur 1 et 2
-    envoieReponsePartieClient(sockConx,sockTransJ1,repPartJ1);
-    envoieReponsePartieClient(sockConx,sockTransJ2,repPartJ2);
+    err = envoieReponsePartieClient(sockConx,sockTransJ1,repPartJ1);
+    if(err == 1){
+       closeExitSocketServeur(sockConx,sockTransJ1);
+    }
+
+    err = envoieReponsePartieClient(sockConx,sockTransJ2,repPartJ2);
+    if(err == 1){
+       closeExitSocketServeur(sockConx,sockTransJ2);
+    }
 
     while(partieFinie == 0) {
         TypCoupReq coup;
         TypCoupRep repCoup;
 
         /************************** RECEPTOIN D'UN COUP ***********************/
-        if (nbCoup%2 == 0) 
+        if (nbCoup%2 == 0){
+            printf("J'attend un coup de J1\n");
             coup = recoitRequeteCoup(sockConx,sockTransJ1);  
-        else 
-            coup = recoitRequeteCoup(sockConx,sockTransJ2);
+            repCoup = remplieRepCoutClient(1,coup);
+            err = testErreur(repCoup.err);
+            if(err == 1){
+                closeExitSocketServeur(sockConx,sockTransJ2);
+            }
+            err = envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+            int err2 = testErreur(err);
+            if(err2 == 1){
+                closeExitSocketServeur(sockConx,sockTransJ2);
+            }
+
+        } 
+            
+        else {
+            printf("J'attend un coup de J2\n");
+            coup = recoitRequeteCoup(sockConx,sockTransJ2); 
+            repCoup = remplieRepCoutClient(1,coup);
+            err = envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+            int err2 = testErreur(err);
+             if(err2 == 1){
+                closeExitSocketServeur(sockConx,sockTransJ2);
+            }
+        }
+           
         
         /************************** AFFICHAGE COUP RECU ***********************/
-        if(coup.symbolJ == ROND){
-            printf("Coup venant de j2 : ROND \n");
-        }
-        else if(coup.symbolJ == CROIX){
-            printf("Coup venant de j1 : CROIX \n");
-        } 
         afficheCase(coup.pos);
 
-        /********************* ENVOIE REPONSE DU COUP *************************/
-        
-        //remplieRepCoup();
-        /*if (nbCoup%2 == 0) 
-        {
-            envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+        /************************** BLOCAGE DU JOUEUR NE JOUANT PAS ***********************/
+
+        if(coup.symbolJ == ROND){
+            printf("Coup venant de j2 : ROND \n");
+            err = send(sockTransJ1, "O", 2, 0);
+            if(err<0){
+                closeExitSocketServeur(sockConx,sockTransJ1);
+            }
         }
-        else 
-        {
-            envoieReponseCoup(sockConx,sockTransJ2,repCoup);    
+        if(coup.symbolJ == CROIX){
+            printf("Coup venant de j1 : CROIX \n");
+            err = send(sockTransJ2, "O", 2, 0);
+             if(err<0){
+                closeExitSocketServeur(sockConx,sockTransJ2);
+            }
         } 
-*/
+       
 
         nbCoup++;
-        //partieFinie = 1;
     }
 
     shutdown(sockTransJ1, 2);  

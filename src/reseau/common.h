@@ -12,5 +12,6 @@ void affichePlateau(TypPlat tp);
 void afficheSousPlateau(TypSousPlat tsp);
 TypPlat formatPlateau(char c);
 TypSousPlat formatSousPlateau(char* str);
+int testErreur(TypErreur err);
 
 #endif

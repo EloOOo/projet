@@ -62,27 +62,31 @@ TypCoupReq remplieRequeteCoup(TypSymbol symb,TypCase tc){
     return typC;
 }
 
-void envoieRequetePartie(TypPartieReq typR, int sock){
+int envoieRequetePartie(TypPartieReq typR, int sock){
     int err;
     err = send(sock, &typR, sizeof(typR), 0);
     if (err <0) {
       perror("client : erreur sur le send");
-      shutdown(sock, 2); 
+      return ERR_PARTIE;
+      /*shutdown(sock, 2); 
       close(sock);
-      exit(3);
+      exit(3);*/
     }
+    return ERR_OK;
 }
 
-void envoieRequeteCoup(TypCoupReq typC, int sock){
+int envoieRequeteCoup(TypCoupReq typC, int sock){
     int err;
     printf("Envoi du coup ... \n");
     err = send(sock, &typC, sizeof(typC), 0);
     if (err <0) {
       perror("client : erreur sur le send (Coup)");
-      shutdown(sock, 2); 
+      return ERR_COUP;
+      /*shutdown(sock, 2); 
       close(sock);
-      exit(3);
+      exit(3);*/
     }
+    return ERR_OK;
 }
 
 TypPartieRep recoitReponsePartie(int sock){
@@ -92,15 +96,15 @@ TypPartieRep recoitReponsePartie(int sock){
     err = recv(sock, &typPartRep, sizeof(typPartRep), 0);
     if (err < 0) {
         perror("client : erreur dans la reception");
-        shutdown(sock, 2); 
+        typPartRep.err = ERR_PARTIE;
+        /*shutdown(sock, 2); 
         close(sock);
-        exit(4);
+        exit(4);*/
     }
     return typPartRep;
 }   
 
 void afficheInfoPartie(TypPartieRep typPartRep){
-    printf("symb : %d\n",typPartRep.symb);
     if(typPartRep.symb == ROND){
          printf("Vous avez le symbole ROND \n");
     }
@@ -109,4 +113,48 @@ void afficheInfoPartie(TypPartieRep typPartRep){
     }
    
     printf("Votre adversaire est %s \n",typPartRep.nomAdvers);
+}
+
+TypCoupRep recoitReponseCoup(int sock){
+    TypCoupRep typCoupRep;
+    int err;
+    printf("Réception d'un message du serveur\n");
+    err = recv(sock, &typCoupRep, sizeof(typCoupRep), 0);
+    if (err < 0) {
+        perror("client : erreur dans la reception");
+        shutdown(sock, 2); 
+        close(sock);
+        exit(4);
+    }
+    return typCoupRep;
+}   
+
+void afficheReponseCoup(int sock,TypCoupRep typCoupRep){
+    afficheTypValCoup(typCoupRep.validCoup);
+    afficheTypCoup(typCoupRep.propCoup);
+}   
+
+void afficheTypValCoup(TypValCoup tvc){
+    switch(tvc) {
+        case VALID: printf("Le coup est valide\n"); break;
+        case TIMEOUT: printf("Réponse trop longue, fin du jeu\n"); break;
+        case TRICHE: printf("Vous avez trichez, fin du jeu\n"); break;
+    }
+}
+
+void afficheTypCoup(TypCoup tc){
+    switch(tc) {
+        case CONT: printf("La partie continue\n"); break;
+        case GAGNANT: printf("Vous avez gagné\n"); break;
+        case NULLE: printf("Partie nulle\n"); break;
+        case PERDU: printf("Vous avez perdu\n"); break;
+        default: printf("La partie continue\n"); break;
+    }
+}
+
+void closeExitSocketClient(int sock){
+    printf("Fin du jeu\n");
+    shutdown(sock, 2); 
+    close(sock);
+    exit(3);
 }

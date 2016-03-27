@@ -10,6 +10,7 @@ void purger(){
 }
 
 void afficheCase(TypCase tc){
+    printf("Coup joué \n");
     printf("Plateau : ");
     affichePlateau(tc.numPlat);
     printf("Sous plateau : ");
@@ -69,4 +70,23 @@ TypSousPlat formatSousPlateau(char* str){
     else if(strcmp(str, "HUIT") == 0) tsp = HUIT;
     else if(strcmp(str, "NEUF") == 0) tsp = NEUF;
     return tsp;
+}
+
+int testErreur(TypErreur err){
+    switch(err) {
+        case ERR_OK: 
+            printf("Pas d'erreur\n");
+            return 0;
+        case ERR_PARTIE: 
+            printf("La requete de partie a échoué\n");
+            return 1; 
+        case ERR_COUP: 
+            printf("La requete de coup a échoué\n"); 
+            return 1; 
+        case ERR_TYP: printf("Erreur de type de requetes\n"); 
+            return 1; 
+        default: printf("erreur non traité\n"); 
+            return 0; 
+    }
+    return 2;
 }

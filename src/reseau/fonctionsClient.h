@@ -13,8 +13,17 @@ TypCase demandeCaseUser();
 TypCase demandeCaseIA();                                                                                
 TypPartieReq remplieRequetePartie(char nom[MAX_CH]);
 TypCoupReq remplieRequeteCoup(TypSymbol  symb,TypCase tc);
-void envoieRequetePartie(TypPartieReq typR, int sock);
+int envoieRequetePartie(TypPartieReq typR, int sock);
 TypPartieRep recoitReponsePartie(int sock);
 void afficheInfoPartie(TypPartieRep typPartRep);
+int envoieRequeteCoup(TypCoupReq typC, int sock);
+TypCoupRep recoitReponseCoup(int sock);
+void afficheReponseCoup(int sock,TypCoupRep typCoupRep);
+void afficheTypValCoup(TypValCoup tvc);
+void afficheTypCoup(TypCoup tc);
+void closeExitSocketClient(int sock);
+
+
+
 
 #endif
