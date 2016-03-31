@@ -75,19 +75,7 @@ int envoieRequetePartie(TypPartieReq typR, int sock){
     return ERR_OK;
 }
 
-int envoieRequeteCoup(TypCoupReq typC, int sock){
-    int err;
-    printf("Envoi du coup ... \n");
-    err = send(sock, &typC, sizeof(typC), 0);
-    if (err <0) {
-      perror("client : erreur sur le send (Coup)");
-      return ERR_COUP;
-      /*shutdown(sock, 2); 
-      close(sock);
-      exit(3);*/
-    }
-    return ERR_OK;
-}
+
 
 TypPartieRep recoitReponsePartie(int sock){
     TypPartieRep typPartRep;

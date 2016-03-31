@@ -16,7 +16,6 @@ TypCoupReq remplieRequeteCoup(TypSymbol  symb,TypCase tc);
 int envoieRequetePartie(TypPartieReq typR, int sock);
 TypPartieRep recoitReponsePartie(int sock);
 void afficheInfoPartie(TypPartieRep typPartRep);
-int envoieRequeteCoup(TypCoupReq typC, int sock);
 TypCoupRep recoitReponseCoup(int sock);
 void afficheReponseCoup(int sock,TypCoupRep typCoupRep);
 void afficheTypValCoup(TypValCoup tvc);

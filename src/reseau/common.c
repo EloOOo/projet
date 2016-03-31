@@ -90,3 +90,14 @@ int testErreur(TypErreur err){
     }
     return 2;
 }
+
+int envoieRequeteCoup(TypCoupReq typC, int sock){
+    int err;
+    printf("Envoi du coup ... \n");
+    err = send(sock, &typC, sizeof(typC), 0);
+    if (err <0) {
+      perror("client : erreur sur le send (Coup)");
+      return ERR_COUP;
+    }
+    return ERR_OK;
+}

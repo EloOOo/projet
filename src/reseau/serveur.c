@@ -12,7 +12,7 @@ main(int argc, char** argv) {
     int sockConx, 
         sockTransJ1,    
         sockTransJ2,      
-        err,
+        err, err2,
         partieFinie = 0,
         nbCoup = 0;	       
     TypIdRequest typR = PARTIE;
@@ -68,13 +68,24 @@ main(int argc, char** argv) {
         if (nbCoup%2 == 0){
             printf("J'attend un coup de J1\n");
             coup = recoitRequeteCoup(sockConx,sockTransJ1);  
+
+            //envoie le coup au joueur adverse
+            err = envoieRequeteCoup(coup,sockTransJ2);
+
             repCoup = remplieRepCoutClient(1,coup);
             err = testErreur(repCoup.err);
             if(err == 1){
                 closeExitSocketServeur(sockConx,sockTransJ2);
             }
+            //envoie la validation au J1
             err = envoieReponseCoup(sockConx,sockTransJ1,repCoup);
-            int err2 = testErreur(err);
+            err2 = testErreur(err);
+            if(err2 == 1){
+                closeExitSocketServeur(sockConx,sockTransJ2);
+            }
+            //envoie la validation au J2
+            err = envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+            err2 = testErreur(err);
             if(err2 == 1){
                 closeExitSocketServeur(sockConx,sockTransJ2);
             }
@@ -84,8 +95,16 @@ main(int argc, char** argv) {
         else {
             printf("J'attend un coup de J2\n");
             coup = recoitRequeteCoup(sockConx,sockTransJ2); 
+
+            //envoie le coup au joueur adverse
+            err = envoieRequeteCoup(coup,sockTransJ1);
+
             repCoup = remplieRepCoutClient(1,coup);
+
+            //envoie la validation au J2
             err = envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+            //envoie la validation au J1
+            err = envoieReponseCoup(sockConx,sockTransJ1,repCoup);
             int err2 = testErreur(err);
              if(err2 == 1){
                 closeExitSocketServeur(sockConx,sockTransJ2);
@@ -97,7 +116,7 @@ main(int argc, char** argv) {
         afficheCase(coup.pos);
 
         /************************** BLOCAGE DU JOUEUR NE JOUANT PAS ***********************/
-
+        /*
         if(coup.symbolJ == ROND){
             printf("Coup venant de j2 : ROND \n");
             err = send(sockTransJ1, "O", 2, 0);
@@ -112,7 +131,7 @@ main(int argc, char** argv) {
                 closeExitSocketServeur(sockConx,sockTransJ2);
             }
         } 
-       
+       */
 
         nbCoup++;
     }

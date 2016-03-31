@@ -13,5 +13,6 @@ void afficheSousPlateau(TypSousPlat tsp);
 TypPlat formatPlateau(char c);
 TypSousPlat formatSousPlateau(char* str);
 int testErreur(TypErreur err);
+int envoieRequeteCoup(TypCoupReq typC, int sock);
 
 #endif
