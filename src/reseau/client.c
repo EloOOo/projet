@@ -51,37 +51,54 @@ int main(int argc, char **argv){
 
     while (partieFinie == 0) 
     {
-        /*memset(&tCoupRecu, 0, sizeof(tCoupRecu));
-        memset(&validAdv, 0, sizeof(validAdv));*/
-
-    // Si joueur 1 ==> reception APRES envoie
+        //1er joueur
         if (reponsePartie.symb == CROIX)  
         {
+            //demander case, enregistrer la requete, l'envoyer au serveur
             TypCase tc = demandeCaseUser();
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
-            envoieRequeteCoup(requeteCoup,sock);
+            envoieRequeteCoupClient(requeteCoup,sock);
             
-            //Reponse validité coup par le serveur
+            //Attente de la validation du coup par le serveur
             reponseCoup = recoitValidationCoup(sock);
+
+            //Affiche si le coup est valide et l'état de la partie 
             afficheReponseCoup(sock,reponseCoup);
+            
+            //continue ou arrete la partie en fonction de la validation
+            traiteReponseCoup(sock,reponseCoup);
+
             // Affichage de la case envoyée
+            printf("Coup joué  \n");
             afficheCase(requeteCoup.pos);
+
+            //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
+           
 
         }
 
-
-        // si joueur 2 ==> reception coup AVANT l'envoi
         if (reponsePartie.symb == ROND) 
         {  
+            //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
+           
+            //demander case, enregistrer la requete, l'envoyer au serveur
             TypCase tc = demandeCaseUser();
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
-            envoieRequeteCoup(requeteCoup,sock);
-            
+            envoieRequeteCoupClient(requeteCoup,sock);
+
+            //Attente de la validation du coup par le serveur
             reponseCoup = recoitValidationCoup(sock);
+
+            //Affiche si le coup est valide et l'état de la partie
             afficheReponseCoup(sock,reponseCoup);
+            //continue ou arrete la partie en fonction de la validation
+            traiteReponseCoup(sock,reponseCoup);
+
+
             // Affichage de la case envoyée
+            printf("Coup joué \n");
             afficheCase(requeteCoup.pos);
         }
     }

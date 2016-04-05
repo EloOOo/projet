@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
+
 
 #include "protocoleTicTacToe.h"
 #include "common.h"
@@ -8,17 +10,20 @@
 #include "fonctionsServeur.h"
 
 
+
+
 int main(int argc, char** argv) {
     int sockConx, 
         sockTransJ1,    
         sockTransJ2,      
-        err, err2,
         partieFinie = 0,
         nbCoup = 0;	       
-    TypPartieReq reqPartieJ1;
-    TypPartieReq reqPartieJ2; 
-    TypPartieRep repPartJ1;
-    TypPartieRep repPartJ2;
+    TypPartieReq requetePartieJ1;
+    TypPartieReq requetePartieJ2; 
+    TypPartieRep validationPartieJ1;
+    TypPartieRep validationPartieJ2;
+    time_t tDebut,tFin;
+    double tExec=0.;
 
     if (argc != 2) {
         printf ("usage : serveurTCP no_port\n");
@@ -28,84 +33,73 @@ int main(int argc, char** argv) {
     int port  = atoi(argv[1]);
     sockConx = socketServeur(port);
 
-    //Attende du 1er joueur
+    //Attente du 1er joueur
     sockTransJ1 = attendRequeteClient(sockConx);
 
-    //reception d'une demande de partie
-    reqPartieJ1 = recoitRequetePartieClient(sockConx,sockTransJ1);
-    //fin du traitement de la demande de partie sur le 1er joueur
+    //reception d'une demande de partie du joueur1 
+    requetePartieJ1 = recoitRequetePartieClient(sockConx,sockTransJ1);
 
-    //Attende du 2eme joueur
+    //Attente du 2eme joueur
     sockTransJ2 = attendRequeteClient(sockConx);
 
-    //reception d'une demande de partie
-    reqPartieJ2 = recoitRequetePartieClient(sockConx,sockTransJ2);
+    //reception d'une demande de partie du joueur 2 
+    requetePartieJ2 = recoitRequetePartieClient(sockConx,sockTransJ2);
 
-    //remplie les réponses clients
-    repPartJ1 =remplieRepPartieClient(1,reqPartieJ1,reqPartieJ2);
-    repPartJ2 =remplieRepPartieClient(0,reqPartieJ2,reqPartieJ1);
+    //remplie les réponses de parties pour les clients
+    validationPartieJ1 = remplieRepPartieClient(1,requetePartieJ1,requetePartieJ2);
+    validationPartieJ2 = remplieRepPartieClient(2,requetePartieJ2,requetePartieJ1);
     
     //envoie reponse partie au joueur 1 et 2
-    err = envoieReponsePartieClient(sockConx,sockTransJ1,repPartJ1);
-    if(err == 1){
-       closeExitSocketServeur(sockConx,sockTransJ1);
-    }
-
-    err = envoieReponsePartieClient(sockConx,sockTransJ2,repPartJ2);
-    if(err == 1){
-       closeExitSocketServeur(sockConx,sockTransJ2);
-    }
+    envoieReponsePartieClient(sockConx,sockTransJ1,validationPartieJ1);
+    envoieReponsePartieClient(sockConx,sockTransJ2,validationPartieJ2);
 
     while(partieFinie == 0) {
+        tDebut=time(NULL);
         TypCoupReq coup;
         TypCoupRep repCoup;
 
-        /************************** RECEPTOIN D'UN COUP ***********************/
+        //reception d'un coup du J1
         if (nbCoup%2 == 0){
             printf("J'attend un coup de J1\n");
+            //reception d'un coup du J1
+            tFin=time(NULL);
+            tExec=difftime(tDebut,tFin);    
+            printf("Temps : %f \n",tExec);
             coup = recoitRequeteCoup(sockConx,sockTransJ1);  
+            
 
-            //envoie le coup au joueur adverse
-            envoieRequeteCoup(coup,sockTransJ2);
+            //envoie le coup au J2
+            envoieRequeteCoupServeur(coup,sockConx,sockTransJ2);
 
+            //remplie la validation du coup
             repCoup = remplieRepCoutClient(1,coup);
            
             
-            //envoie la validation au J1
-            err = envoieReponseCoup(sockConx,sockTransJ1,repCoup);
-            err2 = testErreur(err);
-            if(err2 == 1){
-                closeExitSocketServeur(sockConx,sockTransJ2);
-            }
-            //envoie la validation au J2
-            err = envoieReponseCoup(sockConx,sockTransJ2,repCoup);
-            err2 = testErreur(err);
-            if(err2 == 1){
-                closeExitSocketServeur(sockConx,sockTransJ2);
-            }
+            //envoie la validation au J1 et J2
+            envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+            envoieReponseCoup(sockConx,sockTransJ2,repCoup);
 
+            printf("Coup de J1\n");
+            afficheCase(coup.pos);
         } 
             
         else {
             printf("J'attend un coup de J2\n");
+             //reception d'un coup du J2
             coup = recoitRequeteCoup(sockConx,sockTransJ2); 
 
-            //envoie le coup au joueur adverse
-            envoieRequeteCoup(coup,sockTransJ1);
+            //envoie le coup au J1
+            envoieRequeteCoupServeur(coup,sockConx,sockTransJ1);
 
-            repCoup = remplieRepCoutClient(1,coup);
+            repCoup = remplieRepCoutClient(2,coup);
 
-            //envoie la validation au J2
-            err = envoieReponseCoup(sockConx,sockTransJ2,repCoup);
-            //envoie la validation au J1
-            err = envoieReponseCoup(sockConx,sockTransJ1,repCoup);
-            int err2 = testErreur(err);
-             if(err2 == 1){
-                closeExitSocketServeur(sockConx,sockTransJ2);
-            }
+            //envoie la validation au J2 et J1
+            envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+            envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+
+            printf("Coup de J2\n");
+            afficheCase(coup.pos);
         }
-
-        afficheCase(coup.pos);
 
         nbCoup++;
     }

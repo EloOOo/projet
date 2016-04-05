@@ -11,7 +11,6 @@ void purger(){
 }
 
 void afficheCase(TypCase tc){
-    printf("Coup joué \n");
     printf("Plateau : ");
     affichePlateau(tc.numPlat);
     printf("Sous plateau : ");
@@ -92,19 +91,10 @@ int testErreur(TypErreur err){
     return 2;
 }
 
-//gerer ça : le client et le serveur peuvent envoyer des coups gerer fermeture socket
-void envoieRequeteCoup(TypCoupReq typC, int sock){
-    int err;
-    printf("Envoi du coup ... \n");
-    err = send(sock, &typC, sizeof(typC), 0);
-    if (err <0) {
-        closeExitSocketClient(sock);
-    }
-}
 
-void closeExitSocketClient(int sock){
-    printf("Fin du jeu\n");
-    shutdown(sock, 2); 
-    close(sock);
-    exit(3);
-}
+
+
+
+
+
+

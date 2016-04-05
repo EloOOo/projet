@@ -47,7 +47,7 @@ TypCoupReq recoitRequeteCoup(int sockConx,int sockTrans){
     return cout;
 }
 
-//remplie la réponse au client via le cout donné en controllant sa validité
+//remplie la réponse au client pour la demande de partie
 TypPartieRep remplieRepPartieClient(int j,TypPartieReq typPReqJ1,TypPartieReq typPReqJ2){
     TypPartieRep repPartJ;
     if(j == 1){
@@ -55,7 +55,7 @@ TypPartieRep remplieRepPartieClient(int j,TypPartieReq typPReqJ1,TypPartieReq ty
         strcpy(repPartJ.nomAdvers,typPReqJ2.nomJoueur);
         repPartJ.err = ERR_OK;
     }
-    else {
+    if(j == 2){
         repPartJ.symb = ROND;
         strcpy(repPartJ.nomAdvers,typPReqJ2.nomJoueur);
         repPartJ.err = ERR_OK;
@@ -63,19 +63,24 @@ TypPartieRep remplieRepPartieClient(int j,TypPartieReq typPReqJ1,TypPartieReq ty
     return repPartJ;
 }
 
-int envoieReponsePartieClient(int sockConx,int sockTrans,TypPartieRep repPartJ ){
+void envoieReponsePartieClient(int sockConx,int sockTrans,TypPartieRep repPartJ ){
 	int err = send(sockTrans, &repPartJ, sizeof(repPartJ), 0);
     if (err <= 0) {
-        return ERR_PARTIE;
-        perror("serveur : erreur sur le send");
+       closeExitSocketServeur(sockConx,sockTrans);
     }
-    return ERR_OK;
+    
 }
 
+//A MODIFIER
 TypCoupRep remplieRepCoutClient(int j,TypCoupReq coup){
-    //TypCoup* propCoup;
-    //bool rep = validationCoup(j,coup,propCoup);
+    TypCoup* propCoup;
     TypCoupRep repCoupJ;
+    /*
+    bool rep = validationCoup(j,coup,propCoup);
+    if(rep == false){
+        repCoupJ.validCoup = TRICHE;
+    }
+   */
     repCoupJ.err = ERR_OK;
     repCoupJ.validCoup = VALID;
     repCoupJ.propCoup = CONT;
@@ -83,13 +88,21 @@ TypCoupRep remplieRepCoutClient(int j,TypCoupReq coup){
 }
 
 
-int envoieReponseCoup(int sockConx,int sockTrans,TypCoupRep repCoupJ ){
+void envoieReponseCoup(int sockConx,int sockTrans,TypCoupRep repCoupJ ){
     int err = send(sockTrans, &repCoupJ, sizeof(repCoupJ), 0);
     if (err <= 0) {
-        perror("serveur : erreur sur le send");
-        return ERR_COUP;   
+        closeExitSocketServeur(sockConx,sockTrans);   
     }
-    return ERR_OK;
+    
+}
+
+//Envoie d'un coup depuis le serveur
+void envoieRequeteCoupServeur(TypCoupReq typC, int sockConx, int sockTrans){
+    int err;
+    err = send(sockTrans, &typC, sizeof(typC), 0);
+    if (err <0) {
+            closeExitSocketServeur(sockConx,sockTrans);   
+    }
 }
 
 void closeExitSocketServeur(int sockConx,int sockTrans){

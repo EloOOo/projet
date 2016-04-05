@@ -7,6 +7,7 @@
 #include <stdbool.h>
 
 #include "protocoleTicTacToe.h"
+#include "validation.h"
 
 void afficheCase(TypCase tc);
 void affichePlateau(TypPlat tp);
@@ -14,7 +15,6 @@ void afficheSousPlateau(TypSousPlat tsp);
 TypPlat formatPlateau(char c);
 TypSousPlat formatSousPlateau(char* str);
 int testErreur(TypErreur err);
-void envoieRequeteCoup(TypCoupReq typC, int sock);
-void closeExitSocketClient(int sock);
+
 
 #endif

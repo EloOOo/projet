@@ -46,7 +46,6 @@ TypCase demandeCaseIA(){
 
 TypPartieReq remplieRequetePartie(char nom[MAX_CH]){
     TypPartieReq typR;
-    printf("Cration la requete (PARTIE)\n");
     typR.idRequest = PARTIE;
     strcpy(typR.nomJoueur,nom);
     return typR;
@@ -54,7 +53,6 @@ TypPartieReq remplieRequetePartie(char nom[MAX_CH]){
 
 TypCoupReq remplieRequeteCoup(TypSymbol symb,TypCase tc){
     TypCoupReq typC; 
-    printf("Remplie le type de requete (COUP)\n");
     typC.idRequest = COUP;
     typC.symbolJ = symb;                          
     typC.pos = tc;
@@ -98,7 +96,6 @@ void afficheInfoPartie(TypPartieRep typPartRep){
 TypCoupRep recoitValidationCoup(int sock){
     TypCoupRep typCoupRep;
     int err;
-    printf("Attente d'un message du serveur\n");
     err = recv(sock, &typCoupRep, sizeof(typCoupRep), 0);
     if (err < 0) {
         closeExitSocketClient(sock);
@@ -109,7 +106,6 @@ TypCoupRep recoitValidationCoup(int sock){
 TypCoupReq recoitCoup(int sock){
     TypCoupReq typCoupReq;
     int err;
-    printf("Attente d'un message du serveur\n");
     err = recv(sock, &typCoupReq, sizeof(typCoupReq), 0);
     if (err < 0) {
         closeExitSocketClient(sock);
@@ -155,3 +151,28 @@ TypCoupReq recoitEtValidCoup(int sock){
     printf("Le coup est validé\n");
     return tCoupRecu;
 }
+
+//Envoie d'un coup depuis le client
+void envoieRequeteCoupClient(TypCoupReq typC, int sock){
+    int err;
+    err = send(sock, &typC, sizeof(typC), 0);
+    if (err <0) {
+        closeExitSocketClient(sock);
+    }
+}
+
+void closeExitSocketClient(int sock){
+    printf("Fin du jeu\n");
+    shutdown(sock, 2); 
+    close(sock);
+    exit(3);
+}
+
+void traiteReponseCoup(int sock,TypCoupRep typCoupRep){
+    if(typCoupRep.validCoup == TIMEOUT || typCoupRep.validCoup == TRICHE){
+        closeExitSocketClient(sock);
+    }
+    if(typCoupRep.propCoup != CONT){
+        closeExitSocketClient(sock);
+    }
+}  
