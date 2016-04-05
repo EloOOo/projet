@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "common.h"
 
@@ -91,13 +92,19 @@ int testErreur(TypErreur err){
     return 2;
 }
 
-int envoieRequeteCoup(TypCoupReq typC, int sock){
+//gerer ça : le client et le serveur peuvent envoyer des coups gerer fermeture socket
+void envoieRequeteCoup(TypCoupReq typC, int sock){
     int err;
     printf("Envoi du coup ... \n");
     err = send(sock, &typC, sizeof(typC), 0);
     if (err <0) {
-      perror("client : erreur sur le send (Coup)");
-      return ERR_COUP;
+        closeExitSocketClient(sock);
     }
-    return ERR_OK;
+}
+
+void closeExitSocketClient(int sock){
+    printf("Fin du jeu\n");
+    shutdown(sock, 2); 
+    close(sock);
+    exit(3);
 }

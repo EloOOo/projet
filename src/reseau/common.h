@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "protocoleTicTacToe.h"
 
@@ -13,6 +14,7 @@ void afficheSousPlateau(TypSousPlat tsp);
 TypPlat formatPlateau(char c);
 TypSousPlat formatSousPlateau(char* str);
 int testErreur(TypErreur err);
-int envoieRequeteCoup(TypCoupReq typC, int sock);
+void envoieRequeteCoup(TypCoupReq typC, int sock);
+void closeExitSocketClient(int sock);
 
 #endif

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "fonctionsSocket.h"
@@ -8,18 +9,15 @@
 #include "protocoleTicTacToe.h"
 
  
-main(int argc, char **argv){
+int main(int argc, char **argv){
 
-    int sock,err, i,partieFinie = 0,nbCoup=0;             
-    TypPartieReq typPartReq;
-    TypPartieRep typPartRep;
-    TypCoupReq tCoupReq;
-    TypCoupReq tCoupRecu;
-    TypCoupRep tCoupRep;
-    TypCoupRep tCoupRepAdv;
+    int sock, partieFinie = 0;             
+    TypPartieReq requetePartie;
+    TypPartieRep reponsePartie;
+    TypCoupReq requeteCoup;
+    TypCoupRep reponseCoup;
+    TypCoupReq coupAdverse;
     char* nomJ;
-    char msgServeur;
-    TypSymbol  symb;  
 
     if (argc != 4) {
         printf("usage : client nom_machine no_port nom_joueur\n");
@@ -41,99 +39,56 @@ main(int argc, char **argv){
     printf("Début du jeu, envoi d'une demande de partie au serveur : \n");
     
     //remplissage de la requete partie
-    typPartReq = remplieRequetePartie(nomJ);
+    requetePartie = remplieRequetePartie(nomJ);
     
     //envoie de la requete de partie au serveur
-    err = envoieRequetePartie(typPartReq,sock);
-    err = testErreur(err);
-    if(err == 1){
-       closeExitSocketClient(sock);
-    }
-    
+    envoieRequetePartie(requetePartie,sock);
+   
     //reception d'une réponse du serveur
-    typPartRep = recoitReponsePartie(sock);
-    err = testErreur(typPartRep.err);
-    if(err == 1){
-       closeExitSocketClient(sock);
-    }
+    reponsePartie = recoitReponsePartie(sock);
     
-    afficheInfoPartie(typPartRep);
+    afficheInfoPartie(reponsePartie);
 
     while (partieFinie == 0) 
     {
-        //défini si le joueur peut jouer ou non, N = non
-        msgServeur = 'N';
+        /*memset(&tCoupRecu, 0, sizeof(tCoupRecu));
+        memset(&validAdv, 0, sizeof(validAdv));*/
+
+    // Si joueur 1 ==> reception APRES envoie
+        if (reponsePartie.symb == CROIX)  
+        {
+            TypCase tc = demandeCaseUser();
+            requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
+            envoieRequeteCoup(requeteCoup,sock);
+            
+            //Reponse validité coup par le serveur
+            reponseCoup = recoitValidationCoup(sock);
+            afficheReponseCoup(sock,reponseCoup);
+            // Affichage de la case envoyée
+            afficheCase(requeteCoup.pos);
+            coupAdverse = recoitEtValidCoup(sock);
+
+        }
+
 
         // si joueur 2 ==> reception coup AVANT l'envoi
-        if (typPartRep.symb == ROND) 
-        {
-            memset(&tCoupRecu, 0, sizeof(tCoupRecu));
-            memset(&tCoupRepAdv, 0, sizeof(tCoupRepAdv));
-
-            printf("Veuillez patientez, le joueur adverse joue\n");
-            printf("Attente du coup de l'adversaire\n");
-            err = recv(sock, &tCoupRecu, sizeof(tCoupRecu), 0);
-            printf("Votre adversaire à jouer\n");
-            afficheCase(tCoupRecu.pos);
-            printf("Attente de la validation du coup de l'adversaire\n");
-            err = recv(sock, &tCoupRepAdv, sizeof(tCoupRepAdv), 0);
-            printf("Le coup est validé\n");
+        if (reponsePartie.symb == ROND) 
+        {  
+            coupAdverse = recoitEtValidCoup(sock);
             TypCase tc = demandeCaseUser();
-            tCoupReq = remplieRequeteCoup(typPartRep.symb, tc);
-            err = envoieRequeteCoup(tCoupReq,sock);
-            if(err == 1){
-                closeExitSocketClient(sock);
-            }
-            //Reponse = validité(oui/non) du coup par le serveur
-            tCoupRep = recoitReponseCoup(sock);
-            err = testErreur(tCoupRep.err);
-            if(err == 1){
-                closeExitSocketClient(sock);
-            }
-            afficheReponseCoup(sock,tCoupRep);
+            requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
+            envoieRequeteCoup(requeteCoup,sock);
+            
+            reponseCoup = recoitValidationCoup(sock);
+            afficheReponseCoup(sock,reponseCoup);
             // Affichage de la case envoyée
-            afficheCase(tCoupReq.pos);
+            afficheCase(requeteCoup.pos);
         }
-
-
-        // Si joueur 1 ==> reception APRES envoie
-        if (typPartRep.symb == CROIX)  
-        {
-            TypCase tc = demandeCaseUser();
-            tCoupReq = remplieRequeteCoup(typPartRep.symb, tc);
-            err = envoieRequeteCoup(tCoupReq,sock);
-            if(err == 1){
-                closeExitSocketClient(sock);
-            }
-            //Reponse validité coup par le serveur
-            tCoupRep = recoitReponseCoup(sock);
-            err = testErreur(tCoupRep.err);
-            if(err == 1){
-                closeExitSocketClient(sock);
-            }
-            afficheReponseCoup(sock,tCoupRep);
-            // Affichage de la case envoyée
-            afficheCase(tCoupReq.pos);
-            printf("Veuillez patientez, le joueur adverse joue\n");
-            printf("Attente du coup de l'adversaire\n");
-            err = recv(sock, &tCoupRecu, sizeof(tCoupRecu), 0);
-            printf("Votre adversaire à jouer\n");
-            afficheCase(tCoupRecu.pos);
-            printf("Attente de la validation du coup de l'adversaire\n");
-            err = recv(sock, &tCoupRepAdv, sizeof(tCoupRepAdv), 0);
-        }
-
-        
-        
-
-
-
-        
-        //partieFinie = 1;
     }
 
     shutdown(sock, 2);
     close(sock);
+    return 0;
 }
  
 

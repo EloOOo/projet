@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "fonctionsClient.h"
@@ -62,17 +63,12 @@ TypCoupReq remplieRequeteCoup(TypSymbol symb,TypCase tc){
     return typC;
 }
 
-int envoieRequetePartie(TypPartieReq typR, int sock){
+void envoieRequetePartie(TypPartieReq typR, int sock){
     int err;
     err = send(sock, &typR, sizeof(typR), 0);
     if (err <0) {
-      perror("client : erreur sur le send");
-      return ERR_PARTIE;
-      /*shutdown(sock, 2); 
-      close(sock);
-      exit(3);*/
+        closeExitSocketClient(sock);
     }
-    return ERR_OK;
 }
 
 
@@ -83,11 +79,7 @@ TypPartieRep recoitReponsePartie(int sock){
     printf("Attente de l'adversaire\n");
     err = recv(sock, &typPartRep, sizeof(typPartRep), 0);
     if (err < 0) {
-        perror("client : erreur dans la reception");
-        typPartRep.err = ERR_PARTIE;
-        /*shutdown(sock, 2); 
-        close(sock);
-        exit(4);*/
+       closeExitSocketClient(sock);
     }
     return typPartRep;
 }   
@@ -103,19 +95,27 @@ void afficheInfoPartie(TypPartieRep typPartRep){
     printf("Votre adversaire est %s \n",typPartRep.nomAdvers);
 }
 
-TypCoupRep recoitReponseCoup(int sock){
+TypCoupRep recoitValidationCoup(int sock){
     TypCoupRep typCoupRep;
     int err;
-    printf("Réception d'un message du serveur\n");
+    printf("Attente d'un message du serveur\n");
     err = recv(sock, &typCoupRep, sizeof(typCoupRep), 0);
     if (err < 0) {
-        perror("client : erreur dans la reception");
-        shutdown(sock, 2); 
-        close(sock);
-        exit(4);
+        closeExitSocketClient(sock);
     }
     return typCoupRep;
 }   
+
+TypCoupReq recoitCoup(int sock){
+    TypCoupReq typCoupReq;
+    int err;
+    printf("Attente d'un message du serveur\n");
+    err = recv(sock, &typCoupReq, sizeof(typCoupReq), 0);
+    if (err < 0) {
+        closeExitSocketClient(sock);
+    }
+    return typCoupReq;
+}  
 
 void afficheReponseCoup(int sock,TypCoupRep typCoupRep){
     afficheTypValCoup(typCoupRep.validCoup);
@@ -140,9 +140,18 @@ void afficheTypCoup(TypCoup tc){
     }
 }
 
-void closeExitSocketClient(int sock){
-    printf("Fin du jeu\n");
-    shutdown(sock, 2); 
-    close(sock);
-    exit(3);
+
+
+TypCoupReq recoitEtValidCoup(int sock){
+    TypCoupReq tCoupRecu;
+    TypCoupRep validAdv;
+    printf("Veuillez patientez, le joueur adverse joue\n");
+    printf("Attente du coup de l'adversaire\n");
+    tCoupRecu = recoitCoup(sock);
+    printf("Votre adversaire à jouer\n");
+    afficheCase(tCoupRecu.pos);
+    printf("Attente de la validation du coup de l'adversaire\n");
+    validAdv = recoitValidationCoup(sock);
+    printf("Le coup est validé\n");
+    return tCoupRecu;
 }

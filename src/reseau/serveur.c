@@ -1,6 +1,6 @@
-//faire un gestionnaire d'erreur bien avec la struct erreur
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "protocoleTicTacToe.h"
 #include "common.h"
@@ -8,19 +8,15 @@
 #include "fonctionsServeur.h"
 
 
-main(int argc, char** argv) {
+int main(int argc, char** argv) {
     int sockConx, 
         sockTransJ1,    
         sockTransJ2,      
         err, err2,
         partieFinie = 0,
         nbCoup = 0;	       
-    TypIdRequest typR = PARTIE;
     TypPartieReq reqPartieJ1;
-    TypPartieReq reqPartieJ2;
-    char nomJ1[MAX_CH];
-    char nomJ2[MAX_CH];
-    TypSymbol  symb;     
+    TypPartieReq reqPartieJ2; 
     TypPartieRep repPartJ1;
     TypPartieRep repPartJ2;
 
@@ -70,13 +66,11 @@ main(int argc, char** argv) {
             coup = recoitRequeteCoup(sockConx,sockTransJ1);  
 
             //envoie le coup au joueur adverse
-            err = envoieRequeteCoup(coup,sockTransJ2);
+            envoieRequeteCoup(coup,sockTransJ2);
 
             repCoup = remplieRepCoutClient(1,coup);
-            err = testErreur(repCoup.err);
-            if(err == 1){
-                closeExitSocketServeur(sockConx,sockTransJ2);
-            }
+           
+            
             //envoie la validation au J1
             err = envoieReponseCoup(sockConx,sockTransJ1,repCoup);
             err2 = testErreur(err);
@@ -97,7 +91,7 @@ main(int argc, char** argv) {
             coup = recoitRequeteCoup(sockConx,sockTransJ2); 
 
             //envoie le coup au joueur adverse
-            err = envoieRequeteCoup(coup,sockTransJ1);
+            envoieRequeteCoup(coup,sockTransJ1);
 
             repCoup = remplieRepCoutClient(1,coup);
 
@@ -110,28 +104,8 @@ main(int argc, char** argv) {
                 closeExitSocketServeur(sockConx,sockTransJ2);
             }
         }
-           
-        
-        /************************** AFFICHAGE COUP RECU ***********************/
-        afficheCase(coup.pos);
 
-        /************************** BLOCAGE DU JOUEUR NE JOUANT PAS ***********************/
-        /*
-        if(coup.symbolJ == ROND){
-            printf("Coup venant de j2 : ROND \n");
-            err = send(sockTransJ1, "O", 2, 0);
-            if(err<0){
-                closeExitSocketServeur(sockConx,sockTransJ1);
-            }
-        }
-        if(coup.symbolJ == CROIX){
-            printf("Coup venant de j1 : CROIX \n");
-            err = send(sockTransJ2, "O", 2, 0);
-             if(err<0){
-                closeExitSocketServeur(sockConx,sockTransJ2);
-            }
-        } 
-       */
+        afficheCase(coup.pos);
 
         nbCoup++;
     }
@@ -141,4 +115,5 @@ main(int argc, char** argv) {
     shutdown(sockTransJ2, 2);  
     close(sockTransJ2);
     close(sockConx);
+    return 0;
 }

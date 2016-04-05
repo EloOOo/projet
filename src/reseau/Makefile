@@ -8,7 +8,7 @@
 #LD_FLAGS = -lsocket -lnsl
 
 # For Linux
-LD_FLAGS =
+LD_FLAGS = -std=c99 -Wall -Wextra
 
 all: client serveur 
 
