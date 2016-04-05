@@ -77,13 +77,6 @@ main(int argc, char **argv){
             afficheCase(tCoupRecu.pos);
             printf("Attente de la validation du coup de l'adversaire\n");
             err = recv(sock, &tCoupRepAdv, sizeof(tCoupRepAdv), 0);
-            /*while(msgServeur != 'O'){
-                err = recv(sock, &msgServeur, sizeof(msgServeur), 0);
-                if(err < 0){
-                    closeExitSocketClient(sock);
-                }
-
-            }*/
             printf("Le coup est validé\n");
             TypCase tc = demandeCaseUser();
             tCoupReq = remplieRequeteCoup(typPartRep.symb, tc);
@@ -122,12 +115,6 @@ main(int argc, char **argv){
             // Affichage de la case envoyée
             afficheCase(tCoupReq.pos);
             printf("Veuillez patientez, le joueur adverse joue\n");
-            /*while(msgServeur != 'O'){
-                err = recv(sock, &msgServeur, sizeof(msgServeur), 0);
-                if(err < 0){
-                    closeExitSocketClient(sock);
-                }
-            }*/
             printf("Attente du coup de l'adversaire\n");
             err = recv(sock, &tCoupRecu, sizeof(tCoupRecu), 0);
             printf("Votre adversaire à jouer\n");
