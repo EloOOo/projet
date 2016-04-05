@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
             printf("Temps : %f \n",tExec);
             coup = recoitRequeteCoup(sockConx,sockTransJ1);  
             
-
+ 
             //envoie le coup au J2
             envoieRequeteCoupServeur(coup,sockConx,sockTransJ2);
 
