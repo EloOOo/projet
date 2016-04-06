@@ -55,7 +55,8 @@ int main(int argc, char **argv){
         if (reponsePartie.symb == CROIX)  
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
-            TypCase tc = demandeCaseUser();
+            //TypCase tc = demandeCaseUser();
+            TypCase tc = demandeCaseIA();
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
             
@@ -74,8 +75,6 @@ int main(int argc, char **argv){
 
             //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
-           
-
         }
 
         if (reponsePartie.symb == ROND) 
@@ -85,6 +84,7 @@ int main(int argc, char **argv){
            
             //demander case, enregistrer la requete, l'envoyer au serveur
             TypCase tc = demandeCaseUser();
+            //TypCase tc = demandeCaseIA();
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
 

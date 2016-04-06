@@ -40,6 +40,33 @@ TypCase demandeCaseUser(){
 
 TypCase demandeCaseIA(){
     TypCase tc;
+    int sock, err;
+    int nb;
+    int test = 18;
+
+    printf("-------------Communication avec Java------------------\n");
+
+
+    //Creation de la socket client
+    sock =  socketClient("127.0.0.1", 4444);
+    if (sock < 0) { 
+        printf("client : erreur socketClient\n");
+        exit(2);
+    }
+
+    printf("Envoi\n");
+    err = send(sock, &test, sizeof(test), 0);
+    if (err <0) {
+        closeExitSocketClient(sock);
+    }
+
+    printf("Reception\n");
+    err = recv(sock, &nb, sizeof(nb), 0);
+    if (err < 0) {
+       closeExitSocketClient(sock);
+    }
+    printf("Nombre %d\n", nb);
+
     return tc;
 }
                                                                                     
