@@ -203,3 +203,26 @@ void traiteReponseCoup(int sock,TypCoupRep typCoupRep){
         closeExitSocketClient(sock);
     }
 }  
+
+void *startServeurJava(void *arg)
+{
+    int a = *((int *) arg);
+   /* if(a == 1) 
+    {
+        system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
+        system("java -classpath ../../bin/ ia.Main 4444");
+    } 
+    else 
+    {
+        system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
+        system("java -classpath ../../bin/ ia.Main 5555");
+    }*/
+        int i = 0;
+    while(i<100){
+        printf("%d\n", i);
+        i++;
+        sleep(500);
+    }
+    free(arg);
+    pthread_exit(NULL);
+}

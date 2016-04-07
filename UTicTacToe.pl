@@ -78,3 +78,14 @@ evalSousPlateauLui(Sp,SJ1,SJ2,Cout):-
         comptLignePG(Sp,SJ1,Cout1),
         comptLignePG(Sp,SJ2,Cout2),
         Cout is Cout2 - Cout1.
+
+concatene([],L,L).
+concatene([X|L1],L2,R):-
+        concatene(L1,[X|L2],R).
+
+placer([l|T],S,Acc,NSp):-
+        symbole(S),
+        concatene(Acc,[S|T],NSp),
+        !.                
+placer([H|T],S,Acc,NSp):-
+        placer(T,S,[H|Acc],NSp).

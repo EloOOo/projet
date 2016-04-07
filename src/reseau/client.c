@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 #include "common.h"
 #include "fonctionsSocket.h"
@@ -11,19 +12,20 @@
  
 int main(int argc, char **argv){
 
-    int sock, partieFinie = 0;             
+    int sock, symbole ,partieFinie = 0;             
     TypPartieReq requetePartie;
     TypPartieRep reponsePartie;
     TypCoupReq requeteCoup;
     TypCoupRep reponseCoup;
     TypCoupReq coupAdverse;
     char* nomJ;
+    pthread_t thrJava;
 
     if (argc != 4) {
         printf("usage : client nom_machine no_port nom_joueur\n");
         exit(1);
     }
-  
+
     char* nomMachine = argv[1];
     int nbPort = atoi(argv[2]);
     nomJ = argv[3];
@@ -46,17 +48,26 @@ int main(int argc, char **argv){
    
     //reception d'une réponse du serveur
     reponsePartie = recoitReponsePartie(sock);
-    
-    afficheInfoPartie(reponsePartie);
+    if (reponsePartie.symb == CROIX) symbole = 1; else symbole = 2;
 
-    while (partieFinie == 0) 
+    afficheInfoPartie(reponsePartie);
+  
+    /*int* arg = malloc(sizeof(*arg));
+    if ( arg == NULL ) {
+        fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
+        exit(EXIT_FAILURE);
+    }
+    *arg = symbole;
+	pthread_create(&thrJava, NULL, (void *)startServeurJava, arg);
+*/
+ 	while (partieFinie == 0) 
     {
         //1er joueur
         if (reponsePartie.symb == CROIX)  
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
-            //TypCase tc = demandeCaseUser();
-            TypCase tc = demandeCaseIA();
+            TypCase tc = demandeCaseUser();
+  //          TypCase tc = demandeCaseIA();
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
             
@@ -107,5 +118,3 @@ int main(int argc, char **argv){
     close(sock);
     return 0;
 }
- 
-

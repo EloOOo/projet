@@ -7,42 +7,15 @@ public class Main
 {
 	public static void main(String[] args) 
 	{
-		System.out.println("Start Serveur");
-		ServerSocket srv ;
-		int port = 4444;
-		try 
-		{
-		    srv = new ServerSocket(port) ;
-		    Socket s = srv.accept() ;
-		    
-		    OutputStream os =  s.getOutputStream();		    
-		    InputStream is = s.getInputStream();
-		    
-		    //ObjectInputStream ois = new ObjectInputStream(is);
-		    try 
-		    {
-		    	int varTest;
-				varTest =  is.read();
-				
-				System.out.println("J'ai recu: " + varTest);
-		    } 
-		    catch (Exception e)
-		    {
-		    	System.err.println(e);
-		    	e.printStackTrace();
-		    }
-		    
-		    os.write(128);
-		    s.close() ;
-		    
-		    System.out.println("fin");
-		    System.exit(0);
-		} 
-		catch(IOException e) 
-		{
-			System.err.println("Exception Serveur Java : " + e);
-			e.printStackTrace();
+		// TODO: initialiser un plateau vide
+
+		if (args.length!=1){
+		    System.out.println("argument - port");
+		    System.exit(1);
 		}
+		System.out.println("Main");
+		ThrServeurJava thr =  new ThrServeurJava(Integer.parseInt(args[0]));	
+		thr.start();
 		
 		/*	
 		PlateauUltimate pu = new PlateauUltimate();

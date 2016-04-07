@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <pthread.h>
 
 
 #include "common.h"
@@ -27,6 +28,7 @@ void envoieRequeteCoupClient(TypCoupReq typC, int sock);
 TypCoupReq recoitEtValidCoup(int sock);
 void closeExitSocketClient(int sock);
 void traiteReponseCoup(int sock,TypCoupRep typCoupRep);
+void *startServeurJava(void *arg);
 
 
 
