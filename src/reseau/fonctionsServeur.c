@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/time.h>
+#include <sys/socket.h>
 
 #include "common.h"
 #include "fonctionsServeur.h"
@@ -32,17 +34,20 @@ TypPartieReq recoitRequetePartieClient(int sockConx,int sockTrans){
     return typP;
 }
 
-
-TypCoupReq recoitRequeteCoup(int sockConx,int sockTrans){
+//timeout sert à gerer si le temps est dépassé pour le coup
+TypCoupReq recoitRequeteCoup(int sockConx,int sockTrans, int *timeout){
+    struct timeval tv;
+    tv.tv_sec = 6;  
+    tv.tv_usec = 0;  
+    setsockopt(sockTrans, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
+    
     TypCoupReq cout;
     int err;
+    int i = 1;
     err = recv(sockTrans, &cout, sizeof(cout), 0);
     if (err < 0) {
-        perror("serveur : erreur dans la reception (cout)");
-        shutdown(sockTrans, 2); 
-        close(sockTrans);
-        close(sockConx);
-        exit(4);
+        (*timeout) = 1;
+        printf("La reception du coup à durée plus de 6 secondes, fin de partie\n");
     }
     return cout;
 }
@@ -72,18 +77,25 @@ void envoieReponsePartieClient(int sockConx,int sockTrans,TypPartieRep repPartJ 
 }
 
 //A MODIFIER
-TypCoupRep remplieRepCoutClient(int j,TypCoupReq coup){
+TypCoupRep remplieRepCoutClient(int j,TypCoupReq coup,int* timeout){
     TypCoup* propCoup;
     TypCoupRep repCoupJ;
-    /*
-    bool rep = validationCoup(j,coup,propCoup);
+    
+    /*bool rep = validationCoup(j,coup,propCoup);
     if(rep == false){
         repCoupJ.validCoup = TRICHE;
-    }
-   */
-    repCoupJ.err = ERR_OK;
+        repCoupJ.propCoup = PERDU;
+    }*/
+   
     repCoupJ.validCoup = VALID;
     repCoupJ.propCoup = CONT;
+    if((*timeout) == 1){
+        repCoupJ.validCoup = TIMEOUT;
+        repCoupJ.propCoup = PERDU;
+    }
+    repCoupJ.err = ERR_OK;
+   
+    
     return repCoupJ;
 }
 

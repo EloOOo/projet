@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
+#include <sys/time.h>
 
 
 #include "protocoleTicTacToe.h"
@@ -22,8 +22,6 @@ int main(int argc, char** argv) {
     TypPartieReq requetePartieJ2; 
     TypPartieRep validationPartieJ1;
     TypPartieRep validationPartieJ2;
-    time_t tDebut,tFin;
-    double tExec=0.;
 
     if (argc != 2) {
         printf ("usage : serveurTCP no_port\n");
@@ -53,55 +51,76 @@ int main(int argc, char** argv) {
     envoieReponsePartieClient(sockConx,sockTransJ1,validationPartieJ1);
     envoieReponsePartieClient(sockConx,sockTransJ2,validationPartieJ2);
 
-    while(partieFinie == 0) {
-        tDebut=time(NULL);
-        TypCoupReq coup;
+    int timeout = 0;
+    TypCoupReq coup;
         TypCoupRep repCoup;
+    while(partieFinie == 0) {
+        
 
         //reception d'un coup du J1
-        if (nbCoup%2 == 0){
+        if (nbCoup%2 == 0 && timeout == 0){
             printf("J'attend un coup de J1\n");
-            //reception d'un coup du J1
-            tFin=time(NULL);
-            tExec=difftime(tDebut,tFin);    
-            printf("Temps : %f \n",tExec);
-            coup = recoitRequeteCoup(sockConx,sockTransJ1);  
-            
- 
-            //envoie le coup au J2
-            envoieRequeteCoupServeur(coup,sockConx,sockTransJ2);
 
-            //remplie la validation du coup
-            repCoup = remplieRepCoutClient(1,coup);
+            //reception d'un coup du J1
+            coup = recoitRequeteCoup(sockConx,sockTransJ1,&timeout);  
+          
+            //si le joeur 1 à joué en moins de 6s le jeu continue
+            if(timeout == 0){
+
+                 //envoie le coup au J2
+                envoieRequeteCoupServeur(coup,sockConx,sockTransJ2);
+
+                //remplie la validation du coup
+                repCoup = remplieRepCoutClient(1,coup,&timeout);
            
             
-            //envoie la validation au J1 et J2
-            envoieReponseCoup(sockConx,sockTransJ1,repCoup);
-            envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                //envoie la validation au J1 et J2
+                envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                envoieReponseCoup(sockConx,sockTransJ2,repCoup);
 
-            printf("Coup de J1\n");
-            afficheCase(coup.pos);
+                printf("Coup de J1\n");
+                afficheCase(coup.pos);
+                nbCoup++;
+            }
+            if(timeout == 1){
+                repCoup = remplieRepCoutClient(1,coup,&timeout);
+                envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                closeExitSocketServeur(sockConx,sockTransJ1); 
+                closeExitSocketServeur(sockConx,sockTransJ2); 
+                partieFinie = 1;
+
+            }
+           
         } 
             
-        else {
+        if (nbCoup%2 != 0 && timeout == 0){
             printf("J'attend un coup de J2\n");
              //reception d'un coup du J2
-            coup = recoitRequeteCoup(sockConx,sockTransJ2); 
+            coup = recoitRequeteCoup(sockConx,sockTransJ2,&timeout); 
 
-            //envoie le coup au J1
-            envoieRequeteCoupServeur(coup,sockConx,sockTransJ1);
+            if(timeout == 0){
+                //envoie le coup au J1
+                envoieRequeteCoupServeur(coup,sockConx,sockTransJ1);
 
-            repCoup = remplieRepCoutClient(2,coup);
+                repCoup = remplieRepCoutClient(2,coup,&timeout);
 
-            //envoie la validation au J2 et J1
-            envoieReponseCoup(sockConx,sockTransJ2,repCoup);
-            envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                //envoie la validation au J2 et J1
+                envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                envoieReponseCoup(sockConx,sockTransJ1,repCoup);
 
-            printf("Coup de J2\n");
-            afficheCase(coup.pos);
+                printf("Coup de J2\n");
+                afficheCase(coup.pos);
+                nbCoup++;
+            }
+            if(timeout == 1){
+                repCoup = remplieRepCoutClient(2,coup,&timeout);
+                envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                closeExitSocketServeur(sockConx,sockTransJ1); 
+                closeExitSocketServeur(sockConx,sockTransJ2); 
+                partieFinie = 1;
+            }
         }
-
-        nbCoup++;
+       
     }
 
     shutdown(sockTransJ1, 2);  
