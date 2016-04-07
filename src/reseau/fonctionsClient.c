@@ -105,9 +105,12 @@ TypCoupRep recoitValidationCoup(int sock){
 
 TypCoupReq recoitCoup(int sock){
     TypCoupReq typCoupReq;
+    //memset(&typCoupReq, 0, sizeof(typCoupReq));
     int err;
     err = recv(sock, &typCoupReq, sizeof(typCoupReq), 0);
-    if (err < 0) {
+    if (err == 0) {
+        printf("Le coup du joueur adverse n'est pas valide\n");
+        printf("Vous avez gagné\n");
         closeExitSocketClient(sock);
     }
     return typCoupReq;
@@ -148,7 +151,6 @@ TypCoupReq recoitEtValidCoup(int sock){
     afficheCase(tCoupRecu.pos);
     printf("Attente de la validation du coup de l'adversaire\n");
     validAdv = recoitValidationCoup(sock);
-    printf("Le coup est validé\n");
     return tCoupRecu;
 }
 
@@ -176,3 +178,5 @@ void traiteReponseCoup(int sock,TypCoupRep typCoupRep){
         closeExitSocketClient(sock);
     }
 }  
+
+  

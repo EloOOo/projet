@@ -80,6 +80,8 @@ int main(int argc, char **argv){
 
         if (reponsePartie.symb == ROND) 
         {  
+            
+            printf("j2\n");
             //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
            
