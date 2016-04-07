@@ -1,8 +1,50 @@
 package ia;
 
-public class Main {
+import java.net.* ;
+import java.io.* ;
 
-	public static void main(String[] args) {
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+		System.out.println("Start Serveur");
+		ServerSocket srv ;
+		int port = 4444;
+		try 
+		{
+		    srv = new ServerSocket(port) ;
+		    Socket s = srv.accept() ;
+		    
+		    OutputStream os =  s.getOutputStream();		    
+		    InputStream is = s.getInputStream();
+		    
+		    //ObjectInputStream ois = new ObjectInputStream(is);
+		    try 
+		    {
+		    	int varTest;
+				varTest =  is.read();
+				
+				System.out.println("J'ai recu: " + varTest);
+		    } 
+		    catch (Exception e)
+		    {
+		    	System.err.println(e);
+		    	e.printStackTrace();
+		    }
+		    
+		    os.write(128);
+		    s.close() ;
+		    
+		    System.out.println("fin");
+		    System.exit(0);
+		} 
+		catch(IOException e) 
+		{
+			System.err.println("Exception Serveur Java : " + e);
+			e.printStackTrace();
+		}
+		
+		/*	
 		PlateauUltimate pu = new PlateauUltimate();
 		ContenuCase[][] cg = new ContenuCase[3][3];
 		PlateauMorpion[][] plat = new PlateauMorpion[3][3];
@@ -28,6 +70,6 @@ public class Main {
 		plat[0][2].setEstGagne(EtatGrille.Egalite);
 		pu.setPlateau(plat);
 		System.out.println(pu);
-		
+		*/
 	}
 }
