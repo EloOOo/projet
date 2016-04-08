@@ -212,12 +212,12 @@ void *startServeurJava(void *arg)
     if(a == 1) 
     {
         system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
-        system("java -classpath ../../bin/ ia.Main 4444");
+        system("java -classpath ../../bin/ ia.Main 4444 &");
     } 
     else 
     {
         system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
-        system("java -classpath ../../bin/ ia.Main 5555");
+        system("java -classpath ../../bin/ ia.Main 5555 &");
     }
     free(arg);
     pthread_exit(NULL);
