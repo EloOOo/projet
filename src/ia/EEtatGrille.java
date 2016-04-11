@@ -1,11 +1,12 @@
 package ia;
 
-public enum ContenuCase {
-	vide('v'),
-	rond('o'),
-	croix('x');
+public enum EEtatGrille {
+	Egalite('e'),
+	Croix('x'),
+	Rond('o'),
+	Dispo('d');
 	
-	ContenuCase(char s){
+	EEtatGrille(char s){
 		symbole = s;
 	}
 	
@@ -14,4 +15,5 @@ public enum ContenuCase {
 	public String toString(){
 		return ""+symbole;
 	}
+
 }

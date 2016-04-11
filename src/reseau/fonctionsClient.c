@@ -38,35 +38,43 @@ TypCase demandeCaseUser(){
     return tc;
 }
 
-TypCase demandeCaseIA(){
+TypCase demandeCaseIA(int s){
     TypCase tc;
-    int sock, err;
-    int nb;
-    int test = 18;
+    int sock, err, port;
+    char* sp;
+    char p;
+ //   int test = 18;
+    if(s == 1) port = 4444; else port = 5555;
 
     printf("-------------Communication avec Java------------------\n");
 
-
     //Creation de la socket client
-    sock =  socketClient("127.0.0.1", 4444);
+    sock =  socketClient("127.0.0.1", port);
     if (sock < 0) { 
         printf("client : erreur socketClient\n");
         exit(2);
     }
 
-    printf("Envoi\n");
-    err = send(sock, &test, sizeof(test), 0);
-    if (err <0) {
-        closeExitSocketClient(sock);
-    }
+    // printf("Envoi\n");
+    // err = send(sock, &test, sizeof(test), 0);
+    // if (err <0) {
+    //     closeExitSocketClient(sock);
+    // }
 
     printf("Reception\n");
-    err = recv(sock, &nb, sizeof(nb), 0);
+    err = recv(sock, &p, sizeof(p), 0);
     if (err < 0) {
        closeExitSocketClient(sock);
     }
-    printf("Nombre %d\n", nb);
-
+    printf("Plateau %c\n", p);
+    tc.numPlat = formatPlateau(p);
+/*    err = recv(sock, &sp, sizeof(sp), 0);
+    if (err < 0) {
+       closeExitSocketClient(sock);
+    }
+    printf("Sous Plateau %s \n", sp);
+    tc.numSousPlat = formatSousPlateau(sp);
+*/
     return tc;
 }
                                                                                     
@@ -209,16 +217,11 @@ void traiteReponseCoup(int sock,TypCoupRep typCoupRep){
 void *startServeurJava(void *arg)
 {
     int a = *((int *) arg);
+    system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
     if(a == 1) 
-    {
-        system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
-        system("java -classpath ../../bin/ ia.Main 4444 &");
-    } 
+        system("java -classpath ../../bin/ ia.Main 4444");
     else 
-    {
-        system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
-        system("java -classpath ../../bin/ ia.Main 5555 &");
-    }
+        system("java -classpath ../../bin/ ia.Main 5555");
     free(arg);
     pthread_exit(NULL);
 }

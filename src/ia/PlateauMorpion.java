@@ -1,27 +1,27 @@
 package ia;
 
 public class PlateauMorpion {
-	private ContenuCase[][] grille; 
-	private EtatGrille estGagne;
+	private EContenuCase[][] grille; 
+	private EEtatGrille estGagne;
 	
 	public PlateauMorpion() {
-		grille = new ContenuCase[3][3];
-		estGagne = EtatGrille.Dispo;
+		grille = new EContenuCase[3][3];
+		estGagne = EEtatGrille.Dispo;
 	}
 
-	public ContenuCase[][] getGrille() {
+	public EContenuCase[][] getGrille() {
 		return grille;
 	}
 
-	public void setGrille(ContenuCase[][] grille) {
+	public void setGrille(EContenuCase[][] grille) {
 		this.grille = grille;
 	}
 
-	public EtatGrille getEstGagne() {
+	public EEtatGrille getEstGagne() {
 		return estGagne;
 	}
 
-	public void setEstGagne(EtatGrille estGagne) {
+	public void setEstGagne(EEtatGrille estGagne) {
 		this.estGagne = estGagne;
 	}
 	
@@ -32,7 +32,7 @@ public class PlateauMorpion {
 		int c = 1;
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
-				if (grille[i][j] == ContenuCase.vide) {
+				if (grille[i][j] == EContenuCase.vide) {
 					str += c;
 				} else {
 					str += grille[i][j].toString();

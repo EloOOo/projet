@@ -14,7 +14,7 @@
 
 char* demandeNom();
 TypCase demandeCaseUser();
-TypCase demandeCaseIA();                                                                                
+TypCase demandeCaseIA(int s);                                                                                
 TypPartieReq remplieRequetePartie(char nom[MAX_CH]);
 TypCoupReq remplieRequeteCoup(TypSymbol  symb,TypCase tc);
 void envoieRequetePartie(TypPartieReq typR, int sock);

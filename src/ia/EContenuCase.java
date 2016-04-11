@@ -1,12 +1,11 @@
 package ia;
 
-public enum EtatGrille {
-	Egalite('e'),
-	Croix('x'),
-	Rond('o'),
-	Dispo('d');
+public enum EContenuCase {
+	vide('v'),
+	rond('o'),
+	croix('x');
 	
-	EtatGrille(char s){
+	EContenuCase(char s){
 		symbole = s;
 	}
 	
@@ -15,5 +14,4 @@ public enum EtatGrille {
 	public String toString(){
 		return ""+symbole;
 	}
-
 }

@@ -52,22 +52,22 @@ int main(int argc, char **argv){
 
     afficheInfoPartie(reponsePartie);
   
-    /*int* arg = malloc(sizeof(*arg));
+    int* arg = malloc(sizeof(*arg));
     if ( arg == NULL ) {
         fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
         exit(EXIT_FAILURE);
     }
     *arg = symbole;
 	pthread_create(&thrJava, NULL, (void *)startServeurJava, arg);
-*/
+	sleep(1);
  	while (partieFinie == 0) 
     {
         //1er joueur
         if (reponsePartie.symb == CROIX)  
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
-            TypCase tc = demandeCaseUser();
-  //          TypCase tc = demandeCaseIA();
+            // TypCase tc = demandeCaseUser();
+            TypCase tc = demandeCaseIA(symbole);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
             
@@ -90,14 +90,12 @@ int main(int argc, char **argv){
 
         if (reponsePartie.symb == ROND) 
         {  
-            
-            printf("j2\n");
             //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
            
             //demander case, enregistrer la requete, l'envoyer au serveur
             TypCase tc = demandeCaseUser();
-            //TypCase tc = demandeCaseIA();
+            // TypCase tc = demandeCaseIA(symbole);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
 
@@ -108,7 +106,6 @@ int main(int argc, char **argv){
             afficheReponseCoup(sock,reponseCoup);
             //continue ou arrete la partie en fonction de la validation
             traiteReponseCoup(sock,reponseCoup);
-
 
             // Affichage de la case envoyée
             printf("Coup joué \n");
