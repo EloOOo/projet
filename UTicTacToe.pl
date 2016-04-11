@@ -26,23 +26,23 @@ winPlateau([[_,_], [_,_],[S,_],[_,_],[_,_],[S,_],[_,_],[_,_],[S,_]]):-!.
 winPlateau([[S,_], [_,_],[_,_],[_,_],[S,_],[_,_],[_,_],[_,_],[S,_]]):-!.
 winPlateau([[_,_], [_,_],[S,_],[_,_],[S,_],[_,_],[S,_],[_,_],[_,_]]):-!.
 
-move([l,B,C,D,E,F,G,H,I], S, J,[[S,B,C,D,E,F,G,H,I],Cout]):-
+move([[l,B,C,D,E,F,G,H,I],_], S, J,[[S,B,C,D,E,F,G,H,I],Cout]):-
         evalSousPlateau([S,B,C,D,E,F,G,H,I],S,J,Cout).
-move([A,l,C,D,E,F,G,H,I], S, J,[[A,S,C,D,E,F,G,H,I],Cout]):-
+move([[A,l,C,D,E,F,G,H,I],_], S, J,[[A,S,C,D,E,F,G,H,I],Cout]):-
         evalSousPlateau([A,S,C,D,E,F,G,H,I],S,J,Cout).
-move([A,B,l,D,E,F,G,H,I], S, J,[[A,B,S,D,E,F,G,H,I],Cout]):-
+move([[A,B,l,D,E,F,G,H,I],_], S, J,[[A,B,S,D,E,F,G,H,I],Cout]):-
         evalSousPlateau([A,B,S,D,E,F,G,H,I],S,J,Cout).
-move([A,B,C,l,E,F,G,H,I], S, J,[[A,B,C,S,E,F,G,H,I],Cout]):-
+move([[A,B,C,l,E,F,G,H,I],_], S, J,[[A,B,C,S,E,F,G,H,I],Cout]):-
         evalSousPlateau([A,B,C,S,E,F,G,H,I],S,J,Cout).
-move([A,B,C,D,l,F,G,H,I], S, J,[[A,B,C,D,S,F,G,H,I],Cout]):-
+move([[A,B,C,D,l,F,G,H,I],_], S, J,[[A,B,C,D,S,F,G,H,I],Cout]):-
         evalSousPlateau([A,B,C,D,S,F,G,H,I],S,J,Cout).
-move([A,B,C,D,E,l,G,H,I], S, J,[[A,B,C,D,E,S,G,H,I],Cout]):-
+move([[A,B,C,D,E,l,G,H,I],_], S, J,[[A,B,C,D,E,S,G,H,I],Cout]):-
         evalSousPlateau([A,B,C,D,E,S,G,H,I],S,J,Cout).
-move([A,B,C,D,E,F,l,H,I], S, J,[[A,B,C,D,E,F,S,H,I],Cout]):-
+move([[A,B,C,D,E,F,l,H,I],_], S, J,[[A,B,C,D,E,F,S,H,I],Cout]):-
         evalSousPlateau([A,B,C,D,E,F,S,H,I],S,J,Cout).
-move([A,B,C,D,E,F,G,l,I], S, J,[[A,B,C,D,E,F,G,S,I],Cout]):-
+move([[A,B,C,D,E,F,G,l,I],_], S, J,[[A,B,C,D,E,F,G,S,I],Cout]):-
         evalSousPlateau([A,B,C,D,E,F,G,S,I],S,J,Cout).
-move([A,B,C,D,E,F,G,H,l], S, J,[[A,B,C,D,E,F,G,H,S],Cout]):-
+move([[A,B,C,D,E,F,G,H,l],_], S, J,[[A,B,C,D,E,F,G,H,S],Cout]):-
         evalSousPlateau([A,B,C,D,E,F,G,H,S],S,J,Cout).
 
 adversaire(x,o).
@@ -111,7 +111,7 @@ placer([Sp|Cout],S,J,R):- % possibilité nonmember plus tard
         findall([L,Sp|Cout],move(Sp,S,J,L),R).
 
         
-etatFinal([[Sp|LSp]|_],S,[Sp|LSp]) :-
+etatFinal([[[Sp,Cout]|LSp]|_],S,[[Sp,Cout]|LSp]) :-
         winSousPlateau(Sp,S).
 etatFinal([_|LL],S,R) :-
         etatFinal(LL,S,R).
@@ -120,18 +120,19 @@ largeur([],_, _,_) :-
         !,fail.
 largeur(LL,S,_, LR) :-
         etatFinal(LL,S,LR).                  
-largeur(LL,S,J,LR) :-
-        etageSuivant(LL,S,J,[],LL2),
+largeur(Sp,S,J,LR) :-
+        etageSuivant(Sp,S,J,[],LL2),
         J1 is 1-J,
         adversaire(S,A),
-        largeur(LL2,A,J1,LR).
-
+        largeur(LL2,A,J1,LR). 
 pl(S,L) :-
         sousPlateau(Sp),
         evalSousPlateau(Sp,S,0,Cout),
-        largeur([[Sp,Cout]],S,0, Los),
+        largeur([[[Sp,Cout]]],S,0, Los),
         inverse(Los,L).
 
 algo(P,SNous) :-
         write(SNous),
         write(P).
+
+          
