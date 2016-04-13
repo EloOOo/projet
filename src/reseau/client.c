@@ -11,8 +11,8 @@
 
  
 int main(int argc, char **argv){
-
-    int sock, symbole ,partieFinie = 0;             
+    system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
+    int sock, sockJava, symbole ,partieFinie = 0;             
     TypPartieReq requetePartie;
     TypPartieRep reponsePartie;
     TypCoupReq requeteCoup;
@@ -48,26 +48,31 @@ int main(int argc, char **argv){
    
     //reception d'une réponse du serveur
     reponsePartie = recoitReponsePartie(sock);
+    // on conserve le symbole dans un int
     if (reponsePartie.symb == CROIX) symbole = 1; else symbole = 2;
-
+    
     afficheInfoPartie(reponsePartie);
   
-    int* arg = malloc(sizeof(*arg));
+    // Lance le serveur Java automatiquement  + se connceter via la sokcet sockJava
+/*    int* arg = malloc(sizeof(*arg));
     if ( arg == NULL ) {
         fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
         exit(EXIT_FAILURE);
     }
     *arg = symbole;
 	pthread_create(&thrJava, NULL, (void *)startServeurJava, arg);
-	sleep(1);
+	sleep(2);
+	
+	sockJava = connectJava(symbole);
+ */	
  	while (partieFinie == 0) 
     {
         //1er joueur
         if (reponsePartie.symb == CROIX)  
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
-            // TypCase tc = demandeCaseUser();
-            TypCase tc = demandeCaseIA(symbole);
+            TypCase tc = demandeCaseUser();
+            // TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
             
@@ -88,6 +93,7 @@ int main(int argc, char **argv){
             coupAdverse = recoitEtValidCoup(sock);
         }
 
+        // 2eme joueur
         if (reponsePartie.symb == ROND) 
         {  
             //reception du coup adverse et de sa validation(oui/non)
@@ -95,7 +101,7 @@ int main(int argc, char **argv){
            
             //demander case, enregistrer la requete, l'envoyer au serveur
             TypCase tc = demandeCaseUser();
-            // TypCase tc = demandeCaseIA(symbole);
+            // TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
 

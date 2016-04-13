@@ -38,15 +38,11 @@ TypCase demandeCaseUser(){
     return tc;
 }
 
-TypCase demandeCaseIA(int s){
-    TypCase tc;
+int connectJava(int s){
     int sock, err, port;
-    char* sp;
-    char p;
- //   int test = 18;
+    
     if(s == 1) port = 4444; else port = 5555;
-
-    printf("-------------Communication avec Java------------------\n");
+    printf("-------------Connexion au serveur Java------------------\n");
 
     //Creation de la socket client
     sock =  socketClient("127.0.0.1", port);
@@ -54,23 +50,37 @@ TypCase demandeCaseIA(int s){
         printf("client : erreur socketClient\n");
         exit(2);
     }
+    return sock;
+}
 
-    // printf("Envoi\n");
-    // err = send(sock, &test, sizeof(test), 0);
-    // if (err <0) {
-    //     closeExitSocketClient(sock);
-    // }
+TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
+    TypCase tc;
+    int err, spPrec;
+    char* sp;
+    char p, platPrec;
+
+    platPrec = getPlatChar(coupPrec.numPlat); 
+    printf("Envoi\n");
+    err = send(sockJava, &platPrec, sizeof(platPrec), 0);
+    if (err <0) {
+        closeExitSocketClient(sockJava);
+    }
+    spPrec = getSPlatInt(coupPrec.numSousPlat); 
+    err = send(sockJava, &spPrec, sizeof(spPrec), 0);
+    if (err <0) {
+        closeExitSocketClient(sockJava);
+    }
 
     printf("Reception\n");
-    err = recv(sock, &p, sizeof(p), 0);
+    err = recv(sockJava, &p, sizeof(p), 0);
     if (err < 0) {
-       closeExitSocketClient(sock);
+       closeExitSocketClient(sockJava);
     }
     printf("Plateau %c\n", p);
     tc.numPlat = formatPlateau(p);
-/*    err = recv(sock, &sp, sizeof(sp), 0);
+/*    err = recv(sockJava, &sp, sizeof(sp), 0);
     if (err < 0) {
-       closeExitSocketClient(sock);
+       closeExitSocketClient(sockJava);
     }
     printf("Sous Plateau %s \n", sp);
     tc.numSousPlat = formatSousPlateau(sp);
@@ -217,7 +227,6 @@ void traiteReponseCoup(int sock,TypCoupRep typCoupRep){
 void *startServeurJava(void *arg)
 {
     int a = *((int *) arg);
-    system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
     if(a == 1) 
         system("java -classpath ../../bin/ ia.Main 4444");
     else 

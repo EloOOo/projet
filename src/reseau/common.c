@@ -30,6 +30,22 @@ void affichePlateau(TypPlat tp){
         case I: printf(" I\n"); break;
     }
 }
+
+char getPlatChar(TypPlat tp){
+    switch(tp) {
+        case A: return 'A';
+        case B: return 'B';
+        case C: return 'C';
+        case D: return 'D';
+        case E: return 'E';
+        case F: return 'F';
+        case G: return 'G';
+        case H: return 'H';
+        case I: return 'I';
+        default: return 'Z';
+    }
+}
+
 void afficheSousPlateau(TypSousPlat tsp){
     switch(tsp) {
         case UN: printf(" UN\n"); break;
@@ -41,6 +57,22 @@ void afficheSousPlateau(TypSousPlat tsp){
         case SEPT: printf(" SEPT\n"); break;
         case HUIT: printf(" HUIT\n"); break;
         case NEUF: printf(" NEUF\n"); break;
+    }
+}
+
+
+int getSPlatInt(TypSousPlat tsp){
+    switch(tsp) {
+        case UN: return 1;
+        case DEUX: return 2;
+        case TROIS: return 3;
+        case QUATRE: return 4;
+        case CINQ: return 5;
+        case SIX: return 6;
+        case SEPT: return 7;
+        case HUIT: return 8;
+        case NEUF: return 9;
+        default: return 0;
     }
 }
 

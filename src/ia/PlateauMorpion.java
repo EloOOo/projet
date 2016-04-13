@@ -7,6 +7,12 @@ public class PlateauMorpion {
 	public PlateauMorpion() {
 		grille = new EContenuCase[3][3];
 		estGagne = EEtatGrille.Dispo;
+		for(int i=0;i<3;i++){
+			for(int j=0;j<3;j++){
+				grille[i][j] = EContenuCase.vide;
+			}
+		}
+		
 	}
 
 	public EContenuCase[][] getGrille() {

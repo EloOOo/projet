@@ -11,7 +11,9 @@
 
 void afficheCase(TypCase tc);
 void affichePlateau(TypPlat tp);
+char getPlatChar(TypPlat tp);
 void afficheSousPlateau(TypSousPlat tsp);
+int getSPlatInt(TypSousPlat tsp);
 TypPlat formatPlateau(char c);
 TypSousPlat formatSousPlateau(char* str);
 int testErreur(TypErreur err);

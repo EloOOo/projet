@@ -14,7 +14,8 @@
 
 char* demandeNom();
 TypCase demandeCaseUser();
-TypCase demandeCaseIA(int s);                                                                                
+int connectJava(int s);
+TypCase demandeCaseIA(int sockJava, TypCase coupPrec);
 TypPartieReq remplieRequetePartie(char nom[MAX_CH]);
 TypCoupReq remplieRequeteCoup(TypSymbol  symb,TypCase tc);
 void envoieRequetePartie(TypPartieReq typR, int sock);

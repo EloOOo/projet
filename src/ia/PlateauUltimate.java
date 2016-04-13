@@ -2,9 +2,18 @@ package ia;
 
 public class PlateauUltimate {
 	private PlateauMorpion[][] plateau;
+	private boolean partieFinie;
 
 	public PlateauUltimate() {
 		plateau = new PlateauMorpion[3][3];
+		partieFinie = false;
+		for(int i=0;i<3;i++){
+			for(int j=0;j<3;j++){
+				plateau[i][j] = new PlateauMorpion();
+				plateau[i][j].setEstGagne(EEtatGrille.Dispo);
+			}
+		}
+		
 	}
 	
 	public PlateauMorpion[][] getPlateau() {
@@ -15,7 +24,14 @@ public class PlateauUltimate {
 		this.plateau = plateau;
 	}
 	
-	
+	public boolean getPartieFinie() {
+		return partieFinie;
+	}
+
+	public void setPartieFinie(boolean pf) {
+		partieFinie = pf;
+	}
+
 	// [[d,[1,2,3,4,5,6,7,8,9]], [d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]]]
 	public String toString() {
 		String str = "[";
