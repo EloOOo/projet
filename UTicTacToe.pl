@@ -140,6 +140,25 @@ algo(P,SNous) :-
         write(SNous),
         write(P).
 
+/*trouveAlpha([[[l,l,l,l,l,l,l,l,l],0],[[x,l,l,l,l,l,l,l,l],3],[[x,x,l,l,l,l,l,l,o],1]],0,Cout).*/
+trouveAlpha([],Acc,Acc).
+trouveAlpha([[_,Cout]|RSp],Cout2,Alpha):-
+        Cout2 =<  Cout,
+        trouveAlpha(RSp,Cout,Alpha).
+ 
+trouveAlpha([[_,Cout]|RSp],Cout2,Alpha):-
+        Cout2 > Cout,
+        trouveAlpha(RSp,Cout2,Alpha).
 
-              
+/*trouveBeta([[[l,l,l,l,l,l,l,l,l],2],[[x,l,l,l,l,l,l,l,l],-1],[[x,x,l,l,l,l,l,l,o],3]],0,Cout).*/
+trouveBeta([],Acc,Acc).
+trouveBeta([[_,Cout]|RSp],Cout2,Alpha):-
+        Cout2 =<  Cout,
+        trouveBeta(RSp,Cout2,Alpha).
+
+trouveBeta([[_,Cout]|RSp],Cout2,Alpha):-
+        Cout2 > Cout,
+        trouveBeta(RSp,Cout,Alpha).
+
+                      
                         
