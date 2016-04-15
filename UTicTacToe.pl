@@ -161,14 +161,21 @@ trouveBeta([[_,Cout]|RSp],Cout2,Alpha):-
         trouveBeta(RSp,Cout,Alpha).
 
 
-% permet de récupérer tout les éléments a comparer dans un étage
+% permet de récupérer tout les éléments a comparer d'un étage
 recupPremElem([],Acc,Acc).
 recupPremElem([[X|_]|L],Acc,R):-
         recupPremElem(L,[X|Acc],R).
-        
+     
+% a trouver meilleur nom je suis pas inspirer...   
 test(Sp,S,R):-
         comptLignePG(Sp,S,Cout),
         etageSuivant([[[Sp,Cout]]],S,0,[],L),
         recupPremElem(L,[],LL),
         trouveAlpha(LL,0,R). 
+
+test2(Sp,S,R):-
+        comptLignePG(Sp,S,Cout),
+        etageSuivant([[[Sp,Cout]]],S,0,[],L),
+        recupPremElem(L,[],LL),
+        trouveBeta(LL,0,R). 
 
