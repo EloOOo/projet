@@ -106,7 +106,7 @@ etageSuivant([Sp|P],S,J,Acc,LLR) :-
         append(R,Acc,NAcc),
         etageSuivant(P,S,J,NAcc,LLR).
 
-placer([Sp|Cout],S,J,R):- % possibilit� nonmember plus tard 
+placer([Sp|Cout],S,J,R):- % possibilite nonmember plus tard 
         findall([L,Sp|Cout],move(Sp,S,J,L),R).
 
         
@@ -160,5 +160,15 @@ trouveBeta([[_,Cout]|RSp],Cout2,Alpha):-
         Cout2 > Cout,
         trouveBeta(RSp,Cout,Alpha).
 
-                      
-                        
+
+% permet de récupérer tout les éléments a comparer dans un étage
+recupPremElem([],Acc,Acc).
+recupPremElem([[X|_]|L],Acc,R):-
+        recupPremElem(L,[X|Acc],R).
+        
+test(Sp,S,R):-
+        comptLignePG(Sp,S,Cout),
+        etageSuivant([[[Sp,Cout]]],S,0,[],L),
+        recupPremElem(L,[],LL),
+        trouveAlpha(LL,0,R). 
+
