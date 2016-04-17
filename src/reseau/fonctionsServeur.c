@@ -88,10 +88,10 @@ TypCoupRep remplieRepCoutClient(int j,TypCoupReq coup,int* timeout){
     }*/
    
     repCoupJ.validCoup = VALID;
-    repCoupJ.propCoup = CONT;
+    //repCoupJ.propCoup = CONT;
     if((*timeout) == 1){
         repCoupJ.validCoup = TIMEOUT;
-        repCoupJ.propCoup = PERDU;
+       
     }
     repCoupJ.err = ERR_OK;
    
@@ -101,6 +101,7 @@ TypCoupRep remplieRepCoutClient(int j,TypCoupReq coup,int* timeout){
 
 
 void envoieReponseCoup(int sockConx,int sockTrans,TypCoupRep repCoupJ ){
+    printf("Envoie d'une validation\n");
     int err = send(sockTrans, &repCoupJ, sizeof(repCoupJ), 0);
     if (err <= 0) {
         closeExitSocketServeur(sockConx,sockTrans);   
@@ -118,7 +119,6 @@ void envoieRequeteCoupServeur(TypCoupReq typC, int sockConx, int sockTrans){
 }
 
 void closeExitSocketServeur(int sockConx,int sockTrans){
-    printf("Fin du jeu\n");
     shutdown(sockTrans, 2); 
     close(sockTrans);
     close(sockConx);

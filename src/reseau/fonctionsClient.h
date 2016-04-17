@@ -26,7 +26,7 @@ void afficheReponseCoup(int sock,TypCoupRep typCoupRep);
 void afficheTypValCoup(TypValCoup tvc);
 void afficheTypCoup(TypCoup tc);
 void envoieRequeteCoupClient(TypCoupReq typC, int sock);
-TypCoupReq recoitEtValidCoup(int sock);
+TypCoupRep recoitEtValidCoup(int sock);
 void closeExitSocketClient(int sock);
 void traiteReponseCoup(int sock,TypCoupRep typCoupRep);
 void *startServeurJava(void *arg);

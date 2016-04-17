@@ -146,18 +146,17 @@ TypCoupRep recoitValidationCoup(int sock){
         closeExitSocketClient(sock);
     }
     return typCoupRep;
-}   
+}  
+
+
 
 TypCoupReq recoitCoup(int sock){
     TypCoupReq typCoupReq;
-    //memset(&typCoupReq, 0, sizeof(typCoupReq));
+    memset(&typCoupReq, 0, sizeof(typCoupReq));
     int err;
     err = recv(sock, &typCoupReq, sizeof(typCoupReq), 0);
-    if (err == 0) {
-        printf("Le coup du joueur adverse n'est pas valide\n");
-        printf("Vous avez gagné\n");
-        closeExitSocketClient(sock);
-    }
+    printf("Votre adversaire à jouer\n");
+    afficheCase(typCoupReq.pos);
     return typCoupReq;
 }  
 
@@ -169,14 +168,14 @@ void afficheReponseCoup(int sock,TypCoupRep typCoupRep){
 void afficheTypValCoup(TypValCoup tvc){
     switch(tvc) {
         case VALID: printf("Le coup est valide\n"); break;
-        case TIMEOUT: printf("Réponse trop longue, fin du jeu\n"); break;
-        case TRICHE: printf("Vous avez trichez, fin du jeu\n"); break;
+        case TIMEOUT: printf("Un timeout a eu lieu\n"); break;
+        case TRICHE: printf("Tricherie\n"); break;
     }
 }
 
 void afficheTypCoup(TypCoup tc){
     switch(tc) {
-        case CONT: printf("La partie continue\n"); break;
+        case CONT: printf("La partie continue \n"); break;
         case GAGNANT: printf("Vous avez gagné\n"); break;
         case NULLE: printf("Partie nulle\n"); break;
         case PERDU: printf("Vous avez perdu\n"); break;
@@ -186,17 +185,16 @@ void afficheTypCoup(TypCoup tc){
 
 
 
-TypCoupReq recoitEtValidCoup(int sock){
+TypCoupRep recoitEtValidCoup(int sock){
     TypCoupReq tCoupRecu;
     TypCoupRep validAdv;
     printf("Veuillez patientez, le joueur adverse joue\n");
     printf("Attente du coup de l'adversaire\n");
     tCoupRecu = recoitCoup(sock);
-    printf("Votre adversaire à jouer\n");
-    afficheCase(tCoupRecu.pos);
+    
     printf("Attente de la validation du coup de l'adversaire\n");
     validAdv = recoitValidationCoup(sock);
-    return tCoupRecu;
+    return validAdv;
 }
 
 //Envoie d'un coup depuis le client

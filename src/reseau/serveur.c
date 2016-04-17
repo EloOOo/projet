@@ -53,40 +53,39 @@ int main(int argc, char** argv) {
 
     int timeout = 0;
     TypCoupReq coup;
-        TypCoupRep repCoup;
+    TypCoupRep repCoup;
     while(partieFinie == 0) {
-        
+        memset(&coup, 0, sizeof(coup));
 
         //reception d'un coup du J1
         if (nbCoup%2 == 0 && timeout == 0){
-            printf("J'attend un coup de J1\n");
 
+            printf("J'attend un coup de J1\n");
             //reception d'un coup du J1
             coup = recoitRequeteCoup(sockConx,sockTransJ1,&timeout);  
           
-            //si le joeur 1 à joué en moins de 6s le jeu continue
-            if(timeout == 0){
+            //envoie le coup au J2
+            envoieRequeteCoupServeur(coup,sockConx,sockTransJ2);
 
-                 //envoie le coup au J2
-                envoieRequeteCoupServeur(coup,sockConx,sockTransJ2);
-
-                //remplie la validation du coup
-                repCoup = remplieRepCoutClient(1,coup,&timeout);
+            //remplie la validation du coup avec gestion du timeout et validité
+            repCoup = remplieRepCoutClient(1,coup,&timeout);
            
-            
-                //envoie la validation au J1 et J2
+            if(timeout == 0){
+                //envoie la validation au J1 et J2, la partie continue
+                repCoup.propCoup = CONT;
                 envoieReponseCoup(sockConx,sockTransJ1,repCoup);
                 envoieReponseCoup(sockConx,sockTransJ2,repCoup);
-
                 printf("Coup de J1\n");
                 afficheCase(coup.pos);
                 nbCoup++;
             }
             if(timeout == 1){
-                repCoup = remplieRepCoutClient(1,coup,&timeout);
+                //envoie la validation au J1 et J2, la partie s'arrete : J1 perdu, J2 gagnant
+                printf("Timeout de J1\n");
+                repCoup.propCoup = PERDU;
                 envoieReponseCoup(sockConx,sockTransJ1,repCoup);
-                closeExitSocketServeur(sockConx,sockTransJ1); 
-                closeExitSocketServeur(sockConx,sockTransJ2); 
+                repCoup.propCoup = GAGNANT;
+                envoieReponseCoup(sockConx,sockTransJ2,repCoup);
                 partieFinie = 1;
 
             }
@@ -94,17 +93,20 @@ int main(int argc, char** argv) {
         } 
             
         if (nbCoup%2 != 0 && timeout == 0){
+            
             printf("J'attend un coup de J2\n");
-             //reception d'un coup du J2
+            //reception d'un coup du J2
             coup = recoitRequeteCoup(sockConx,sockTransJ2,&timeout); 
 
+            //envoie le coup au J1
+            envoieRequeteCoupServeur(coup,sockConx,sockTransJ1);
+
+            //remplie la validation du coup avec gestion du timeout et validité
+            repCoup = remplieRepCoutClient(2,coup,&timeout);
+
             if(timeout == 0){
-                //envoie le coup au J1
-                envoieRequeteCoupServeur(coup,sockConx,sockTransJ1);
-
-                repCoup = remplieRepCoutClient(2,coup,&timeout);
-
-                //envoie la validation au J2 et J1
+                //envoie la validation au J1 et J2, la partie continue
+                repCoup.propCoup = CONT;
                 envoieReponseCoup(sockConx,sockTransJ2,repCoup);
                 envoieReponseCoup(sockConx,sockTransJ1,repCoup);
 
@@ -113,16 +115,17 @@ int main(int argc, char** argv) {
                 nbCoup++;
             }
             if(timeout == 1){
-                repCoup = remplieRepCoutClient(2,coup,&timeout);
+                printf("Timeout de J2\n");
+                repCoup.propCoup = PERDU;
                 envoieReponseCoup(sockConx,sockTransJ2,repCoup);
-                closeExitSocketServeur(sockConx,sockTransJ1); 
-                closeExitSocketServeur(sockConx,sockTransJ2); 
+                repCoup.propCoup = GAGNANT;
+                envoieReponseCoup(sockConx,sockTransJ1,repCoup);
                 partieFinie = 1;
             }
         }
        
     }
-
+    printf("Fin du jeu\n");
     shutdown(sockTransJ1, 2);  
     close(sockTransJ1);
     shutdown(sockTransJ2, 2);  
