@@ -127,7 +127,14 @@ verifSPGagnant(LL,S,_,LR):-
 verifSPGagnant(LL,S,J, LR):-
         J1 is 1-J,
         adversaire(S,A),
-        largeur(LL,A,J1,LR).             
+        largeur(LL,A,J1,LR).          
+
+verifSPGagnantH(LL,S,_,LR):-
+         etatFinal(LL,S,LR).
+verifSPGagnantH(LL,S,J, LR):-
+        J1 is 1-J,
+        adversaire(S,A),
+        largeur(LL,A,J1,LR).     
         
 pl(S,L) :-
         sousPlateau(Sp),
@@ -136,6 +143,40 @@ pl(S,L) :-
         inverse(Los,L).
 
  
+
+heuristiqueL([],_, _,_):- 
+        fail,!.
+
+heuristiqueL(Sp,S,_,LR):- 
+        etatFinal(Sp,S,LR).
+                     
+heuristiqueL([Sp|P],S,J,Sol):- 
+        placer(Sp,S,J,Lch2),
+        insere(P,Lch2,NL),
+        J1 is 1-J,
+        adversaire(S,A),
+        heuristiqueL(NL,A,J1,Sol).
+                               
+parcoursHeuristique(S,Sol):-
+         sousPlateau(Sp),
+         evalSousPlateau(Sp,S,0,C),
+         /*heuristique(D,C),*/
+         heuristiqueL([[[Sp,C]]],S,0,Los),
+         inverse(Los,Sol).
+
+insere(L,[],L).
+insere(L, [Ch|Q],S):- 
+        insereC(Ch, L,R),
+        insere(R,Q,S).
+
+insereC(Ch,[],[Ch]):-!.
+
+insereC([[Ch,Cout]],[[[Ch2,Cout2]|Q]],[[[Ch2,Cout2],[Ch,Cout]|Q]]):-
+        Cout < Cout2,!.
+
+insereC(A,[X|L],[X|Q]):-
+        insereC(A,L,Q).  
+
 algo(P,SNous) :-
         write(SNous),
         write(P).
@@ -161,7 +202,7 @@ trouveBeta([[_,Cout]|RSp],Cout2,Alpha):-
         trouveBeta(RSp,Cout,Alpha).
 
 
-% permet de rÃ©cupÃ©rer tout les Ã©lÃ©ments a comparer d'un Ã©tage
+% permet de récupérer tout les éléments a comparer d'un étage
 recupPremElem([],Acc,Acc).
 recupPremElem([[X|_]|L],Acc,R):-
         recupPremElem(L,[X|Acc],R).
@@ -178,4 +219,3 @@ test2(Sp,S,R):-
         etageSuivant([[[Sp,Cout]]],S,0,[],L),
         recupPremElem(L,[],LL),
         trouveBeta(LL,0,R). 
-
