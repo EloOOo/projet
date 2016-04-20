@@ -15,9 +15,8 @@ int main(int argc, char **argv){
     int sock, sockJava, symbole ,partieFinie = 0;             
     TypPartieReq requetePartie;
     TypPartieRep reponsePartie;
-    TypCoupReq requeteCoup;
+    TypCoupReq requeteCoup, coupAdverse;
     TypCoupRep reponseCoup;
-    TypCoupRep validCoupAdverse;
     char* nomJ;
     pthread_t thrJava;
 
@@ -52,9 +51,9 @@ int main(int argc, char **argv){
     if (reponsePartie.symb == CROIX) symbole = 1; else symbole = 2;
     
     afficheInfoPartie(reponsePartie);
-  
+   	
     // Lance le serveur Java automatiquement  + se connceter via la sokcet sockJava
-/*    int* arg = malloc(sizeof(*arg));
+    int* arg = malloc(sizeof(*arg));
     if ( arg == NULL ) {
         fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
         exit(EXIT_FAILURE);
@@ -64,7 +63,7 @@ int main(int argc, char **argv){
 	sleep(2);
 	
 	sockJava = connectJava(symbole);
- */	
+ 
  	while (partieFinie == 0) 
     {
         memset(&requeteCoup, 0, sizeof(requeteCoup));
@@ -72,8 +71,8 @@ int main(int argc, char **argv){
         if (reponsePartie.symb == CROIX)  
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
-            TypCase tc = demandeCaseUser();
-            // TypCase tc = demandeCaseIA(sockJava, validCoupAdverse.pos);
+            // TypCase tc = demandeCaseUser();
+            TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
             
@@ -91,26 +90,18 @@ int main(int argc, char **argv){
             afficheCase(requeteCoup.pos);
 
             //reception du coup adverse et de sa validation(oui/non)
-            validCoupAdverse = recoitEtValidCoup(sock);
-             //Affiche si le coup est valide et l'état de la partie
-            afficheReponseCoup(sock,validCoupAdverse);
-            //continue ou arrete la partie en fonction de la validation
-            traiteReponseCoup(sock,validCoupAdverse);
+            coupAdverse = recoitEtValidCoup(sock);
         }
 
         // 2eme joueur
         if (reponsePartie.symb == ROND) 
         {  
             //reception du coup adverse et de sa validation(oui/non)
-            validCoupAdverse = recoitEtValidCoup(sock);
-             //Affiche si le coup est valide et l'état de la partie
-            afficheReponseCoup(sock,validCoupAdverse);
-            //continue ou arrete la partie en fonction de la validation
-            traiteReponseCoup(sock,validCoupAdverse);
+            coupAdverse = recoitEtValidCoup(sock);
            
             //demander case, enregistrer la requete, l'envoyer au serveur
             TypCase tc = demandeCaseUser();
-            // TypCase tc = demandeCaseIA(sockJava, validCoupAdverse.pos);
+            // TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
 

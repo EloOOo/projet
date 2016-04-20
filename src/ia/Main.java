@@ -10,10 +10,10 @@ public class Main
 		PlateauUltimate pu = new PlateauUltimate();
 		
 		if (args.length!=1){
-		    System.out.println("argument - port");
+		    System.out.println("Java -- argument - port");
 		    System.exit(1);
 		}
-		System.out.println("Start Serveur");
+		System.out.println("Java -- Start Serveur");
 		
 		ServerSocket srv;
 		int port = Integer.parseInt(args[0]);
@@ -23,9 +23,7 @@ public class Main
 		{
 		    srv = new ServerSocket(port) ;
 		    Socket s = srv.accept() ;
-		    System.out.println("Acceptation");
-		    OutputStream os =  s.getOutputStream();		    
-///		    ObjectOutputStream oos = new ObjectOutputStream(os);
+		    OutputStream os =  s.getOutputStream();		
 		    InputStream is = s.getInputStream();		    
 		    
 			while(pu.getPartieFinie() == false) {
@@ -35,7 +33,7 @@ public class Main
 			    {
 			    	prevPlat =  (char) is.read();
 			    	prevSP = is.read();
-					System.out.println("J'ai recu: " + prevPlat + " " + prevSP);
+					System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
 			    } 
 			    catch (Exception e)
 			    {
@@ -43,14 +41,14 @@ public class Main
 			    	e.printStackTrace();
 			    }
 
-			    System.out.println("Envoie d'une case -- A recupérer via Prolog");
+			    System.out.println("Java -- Envoie d'une case -- A recupérer via Prolog");
 		    	os.write(c.getNumPlat().getN());
-		    	//oos.writeObject(c.getNumSousPlat().toString());
+		    	os.write(c.getNumSousPlat().getVal());
 		    
 			}
 			
 			s.close() ;	    
-		    System.out.println("fin");
+		    System.out.println("Java -- fin");
 		    System.exit(0);
 		} 
 		catch(IOException e) 

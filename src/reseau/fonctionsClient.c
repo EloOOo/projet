@@ -55,8 +55,7 @@ int connectJava(int s){
 
 TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     TypCase tc;
-    int err, spPrec;
-    char* sp;
+    int err, spPrec, sp;
     char p, platPrec;
 
     platPrec = getPlatChar(coupPrec.numPlat); 
@@ -78,13 +77,13 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     }
     printf("Plateau %c\n", p);
     tc.numPlat = formatPlateau(p);
-/*    err = recv(sockJava, &sp, sizeof(sp), 0);
+    err = recv(sockJava, &sp, sizeof(sp), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
-    printf("Sous Plateau %s \n", sp);
-    tc.numSousPlat = formatSousPlateau(sp);
-*/
+    printf("Sous Plateau %d \n", sp);
+    tc.numSousPlat = intToTypSP(sp);
+
     return tc;
 }
                                                                                     
@@ -183,9 +182,7 @@ void afficheTypCoup(TypCoup tc){
     }
 }
 
-
-
-TypCoupRep recoitEtValidCoup(int sock){
+TypCoupReq recoitEtValidCoup(int sock){
     TypCoupReq tCoupRecu;
     TypCoupRep validAdv;
     printf("Veuillez patientez, le joueur adverse joue\n");
@@ -194,7 +191,13 @@ TypCoupRep recoitEtValidCoup(int sock){
     
     printf("Attente de la validation du coup de l'adversaire\n");
     validAdv = recoitValidationCoup(sock);
-    return validAdv;
+
+    //Affiche si le coup est valide et l'état de la partie
+    afficheReponseCoup(sock,validAdv);
+    //continue ou arrete la partie en fonction de la validation
+    traiteReponseCoup(sock,validAdv);
+
+    return tCoupRecu;
 }
 
 //Envoie d'un coup depuis le client

@@ -90,7 +90,7 @@ TypPlat formatPlateau(char c){
     return tp;
 }
 
-TypSousPlat formatSousPlateau(char* str){
+TypSousPlat formatSousPlateau(char*  str){
     TypSousPlat tsp;
     if(strcmp(str, "UN") == 0) tsp = UN;
     else if(strcmp(str, "DEUX") == 0) tsp = DEUX;
@@ -101,6 +101,20 @@ TypSousPlat formatSousPlateau(char* str){
     else if(strcmp(str, "SEPT") == 0) tsp = SEPT;
     else if(strcmp(str, "HUIT") == 0) tsp = HUIT;
     else if(strcmp(str, "NEUF") == 0) tsp = NEUF;
+    return tsp;
+}
+
+TypSousPlat intToTypSP(int val){
+    TypSousPlat tsp;
+    if(val == 1) tsp = UN;
+    else if(val == 2) tsp = DEUX;
+    else if(val == 3) tsp = TROIS;
+    else if(val == 4) tsp = QUATRE;
+    else if(val == 5) tsp = CINQ;
+    else if(val == 6) tsp = SIX;
+    else if(val == 7) tsp = SEPT;
+    else if(val == 8) tsp = HUIT;
+    else if(val == 9) tsp = NEUF;
     return tsp;
 }
 
