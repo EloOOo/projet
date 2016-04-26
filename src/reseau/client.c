@@ -53,17 +53,19 @@ int main(int argc, char **argv){
     afficheInfoPartie(reponsePartie);
    	
     // Lance le serveur Java automatiquement  + se connceter via la sokcet sockJava
-    int* arg = malloc(sizeof(*arg));
-    if ( arg == NULL ) {
-        fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
-        exit(EXIT_FAILURE);
+    if(reponsePartie.symb == ROND) { // pour les tests A ENLEVER par la suite
+	    int* arg = malloc(sizeof(*arg));
+	    if ( arg == NULL ) {
+	        fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
+	        exit(EXIT_FAILURE);
+	    }
+	    *arg = symbole;
+		pthread_create(&thrJava, NULL, (void *)startServeurJava, arg);
+		sleep(1);
+		
+		sockJava = connectJava(symbole);
     }
-    *arg = symbole;
-	pthread_create(&thrJava, NULL, (void *)startServeurJava, arg);
-	sleep(2);
-	
-	sockJava = connectJava(symbole);
- 
+
  	while (partieFinie == 0) 
     {
         memset(&requeteCoup, 0, sizeof(requeteCoup));
@@ -71,8 +73,8 @@ int main(int argc, char **argv){
         if (reponsePartie.symb == CROIX)  
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
-            // TypCase tc = demandeCaseUser();
-            TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
+            TypCase tc = demandeCaseUser();
+            // TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
             
@@ -100,8 +102,8 @@ int main(int argc, char **argv){
             coupAdverse = recoitEtValidCoup(sock);
            
             //demander case, enregistrer la requete, l'envoyer au serveur
-            TypCase tc = demandeCaseUser();
-            // TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
+            // TypCase tc = demandeCaseUser();
+            TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
 

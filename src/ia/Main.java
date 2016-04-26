@@ -23,38 +23,32 @@ public class Main
 		{
 		    srv = new ServerSocket(port) ;
 		    Socket s = srv.accept() ;
-		    OutputStream os =  s.getOutputStream();		
+		    OutputStream os =  s.getOutputStream();	
 		    InputStream is = s.getInputStream();		    
+		    char prevPlat;
+	    	int prevSP;
 		    
 			while(pu.getPartieFinie() == false) {
-				char prevPlat;
-		    	int prevSP;
-				try 
-			    {
-			    	prevPlat =  (char) is.read();
-			    	prevSP = is.read();
-					System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
-			    } 
-			    catch (Exception e)
-			    {
-			    	System.err.println(e);
-			    	e.printStackTrace();
-			    }
-
-			    System.out.println("Java -- Envoie d'une case -- A recupérer via Prolog");
-		    	os.write(c.getNumPlat().getN());
-		    	os.write(c.getNumSousPlat().getVal());
+				
+		    	prevPlat =  (char) is.read();
+		    	prevSP = is.read();
+				System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
 		    
+			    //System.out.println("Java -- Envoie d'une case");
+				os.write(c.getNumPlat().getN());
+				os.flush();
+		    	os.write(c.getNumSousPlat().getVal());
+		    	os.flush();
 			}
 			
 			s.close() ;	    
 		    System.out.println("Java -- fin");
 		    System.exit(0);
 		} 
-		catch(IOException e) 
+		catch(Exception e) 
 		{
-			System.err.println("Exception Serveur Java : " + e);
-			e.printStackTrace();
+			//System.err.println("Exception Serveur Java : " + e);
+			//e.printStackTrace();
 		}	
 	}
 }

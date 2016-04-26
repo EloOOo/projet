@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "common.h"
 #include "fonctionsClient.h"
@@ -33,6 +34,7 @@ TypCase demandeCaseUser(){
     printf("Dans quel sous plateau voulez-vous jouer ? (UN, DEUX, TROIS, QUATRE, CINQ, SIX, SEPT, HUIT, NEUF) \n");
     scanf("%s", str);
     tsp = formatSousPlateau(str);
+    free(str);
     tc.numPlat = tp;
     tc.numSousPlat = tsp;
     return tc;
@@ -55,18 +57,19 @@ int connectJava(int s){
 
 TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     TypCase tc;
-    int err, spPrec, sp;
+    int err, spPrec;
     char p, platPrec;
 
+    int16_t sp;
     platPrec = getPlatChar(coupPrec.numPlat); 
     printf("Envoi\n");
     err = send(sockJava, &platPrec, sizeof(platPrec), 0);
-    if (err <0) {
+    if (err < 0) {
         closeExitSocketClient(sockJava);
     }
     spPrec = getSPlatInt(coupPrec.numSousPlat); 
     err = send(sockJava, &spPrec, sizeof(spPrec), 0);
-    if (err <0) {
+    if (err < 0) {
         closeExitSocketClient(sockJava);
     }
 
@@ -83,7 +86,6 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     }
     printf("Sous Plateau %d \n", sp);
     tc.numSousPlat = intToTypSP(sp);
-
     return tc;
 }
                                                                                     
