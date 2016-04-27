@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
                 envoieReponseCoup(sockConx,sockTransJ1,repCoup);
                 envoieReponseCoup(sockConx,sockTransJ2,repCoup);
                 printf("Coup de J1\n");
-                afficheCase(coup.pos);
+                //afficheCase(coup.pos);
                 nbCoup++;
             }
             if(timeout == 1){
@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
                 envoieReponseCoup(sockConx,sockTransJ1,repCoup);
 
                 printf("Coup de J2\n");
-                afficheCase(coup.pos);
+                //afficheCase(coup.pos);
                 nbCoup++;
             }
             if(timeout == 1){

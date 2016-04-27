@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "fonctionsServeur.h"
+#include "validation.h"
 
 
 
@@ -78,16 +79,27 @@ void envoieReponsePartieClient(int sockConx,int sockTrans,TypPartieRep repPartJ 
 
 //A MODIFIER
 TypCoupRep remplieRepCoutClient(int j,TypCoupReq coup,int* timeout){
-    TypCoup* propCoup;
+    TypCoup propCoup;
     TypCoupRep repCoupJ;
-    
-    /*bool rep = validationCoup(j,coup,propCoup);
-    if(rep == false){
-        repCoupJ.validCoup = TRICHE;
-        repCoupJ.propCoup = PERDU;
-    }*/
-   
+
     repCoupJ.validCoup = VALID;
+    repCoupJ.propCoup = CONT;
+    
+    bool rep = validationCoup(j,coup,&propCoup);
+    if(rep == false){
+        repCoupJ.validCoup = TRICHE;  
+    }
+    if(propCoup == PERDU){
+        repCoupJ.propCoup = PERDU;
+    }
+    if(propCoup == NULLE){
+        repCoupJ.propCoup = NULLE;
+    }
+    if(propCoup == GAGNANT){
+        repCoupJ.propCoup = GAGNANT;
+    }
+   
+    
     //repCoupJ.propCoup = CONT;
     if((*timeout) == 1){
         repCoupJ.validCoup = TIMEOUT;
@@ -101,7 +113,6 @@ TypCoupRep remplieRepCoutClient(int j,TypCoupReq coup,int* timeout){
 
 
 void envoieReponseCoup(int sockConx,int sockTrans,TypCoupRep repCoupJ ){
-    printf("Envoie d'une validation\n");
     int err = send(sockTrans, &repCoupJ, sizeof(repCoupJ), 0);
     if (err <= 0) {
         closeExitSocketServeur(sockConx,sockTrans);   
