@@ -31,6 +31,18 @@ public class PlateauUltimate {
 	public void setPartieFinie(boolean pf) {
 		partieFinie = pf;
 	}
+	
+	public int compteSPGagnant() {
+		int c = 0;
+		for (int i=0; i<3;i++){
+			for (int j=0; j<3;j++){
+				if (plateau[i][j].getEstGagne() == EEtatGrille.Rond || 
+					plateau[i][j].getEstGagne() == EEtatGrille.Croix)
+					c++;
+			}
+		}
+		return c;
+	}
 
 	// [[d,[1,2,3,4,5,6,7,8,9]], [d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]]]
 	public String toString() {
