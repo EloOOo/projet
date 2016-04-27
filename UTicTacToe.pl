@@ -100,6 +100,11 @@ concatene([],L,L).
 concatene([X|L1],L2,R):-
         concatene(L1,[X|L2],R).
 
+
+
+
+
+
 etageSuivant([],_,_,Acc,Acc).
 etageSuivant([Sp|P],S,J,Acc,LLR) :-
         placer(Sp,S,J,R),
@@ -121,13 +126,52 @@ largeur([],_, _,_) :-
 largeur(Sp,S,J,LR) :-
         etageSuivant(Sp,S,J,[],LL2),
         verifSPGagnant(LL2,S,J, LR).
-             
+
+
+/*profondeur([F|L], [F|L]) :-
+        final(F),!.*/
+
+/*profondeur([C|L],Sol) :-
+        deplacement(C,Nt),
+        nonmember(Nt,L),
+        profondeur([Nt|[C|L]],Sol).*/
+
+profondeur(SP,S,_,LR) :-
+         etatFinal(SP,S,LR),!.
+
+profondeur([[SP|P]],S,J,Sol) :-
+        move(SP,S,J,R),
+        nonmember(R,P),
+        verifSPGagnantP([[R|[SP|P]]],S,J,Sol).
+        /*J1 is 1-J,
+        adversaire(S,A),
+        profondeur([[R|[SP|P]]],A,J1,Sol).*/
+
+parcoursProfondeur(S,L) :-
+        sousPlateau(Sp),
+        evalSousPlateau(Sp,S,0,Cout),
+        profondeur([[[Sp,Cout]]],S,0,Los),
+        inverse(Los,L).
+ 
+pl(S,L) :-
+        sousPlateau(Sp),
+        evalSousPlateau(Sp,S,0,Cout),
+        largeur([[[Sp,Cout]]],S,0, Los),
+        inverse(Los,L).
+            
 verifSPGagnant(LL,S,_,LR):-
          etatFinal(LL,S,LR).
 verifSPGagnant(LL,S,J, LR):-
         J1 is 1-J,
         adversaire(S,A),
-        largeur(LL,A,J1,LR).          
+        largeur(LL,A,J1,LR).         
+
+verifSPGagnantP(LL,S,_,LR):-
+         etatFinal(LL,S,LR).
+verifSPGagnantP(LL,S,J, LR):-
+        J1 is 1-J,
+        adversaire(S,A),
+        profondeur(LL,A,J1,LR).  
 
 verifSPGagnantH(LL,S,_,LR):-
          etatFinal(LL,S,LR).
@@ -136,11 +180,7 @@ verifSPGagnantH(LL,S,J, LR):-
         adversaire(S,A),
         largeur(LL,A,J1,LR).     
         
-pl(S,L) :-
-        sousPlateau(Sp),
-        evalSousPlateau(Sp,S,0,Cout),
-        largeur([[[Sp,Cout]]],S,0, Los),
-        inverse(Los,L).
+
 
  
 
@@ -151,8 +191,12 @@ heuristiqueL(Sp,S,_,LR):-
         etatFinal(Sp,S,LR).
                      
 heuristiqueL([Sp|P],S,J,Sol):- 
+        write(P),
         placer(Sp,S,J,Lch2),
+        write(Lch2),
         insere(P,Lch2,NL),
+        %tri2(Lch2,NL),
+        write(NL),
         J1 is 1-J,
         adversaire(S,A),
         heuristiqueL(NL,A,J1,Sol).
@@ -163,6 +207,7 @@ parcoursHeuristique(S,Sol):-
          /*heuristique(D,C),*/
          heuristiqueL([[[Sp,C]]],S,0,Los),
          inverse(Los,Sol).
+
 
 insere(L,[],L).
 insere(L, [Ch|Q],S):- 
@@ -175,7 +220,13 @@ insereC([[Ch,Cout]],[[[Ch2,Cout2]|Q]],[[[Ch2,Cout2],[Ch,Cout]|Q]]):-
         Cout < Cout2,!.
 
 insereC(A,[X|L],[X|Q]):-
-        insereC(A,L,Q).  
+        insereC(A,L,Q). 
+
+tri([],[]).
+tri([X|L],LT):-
+        tri(L,L1),
+        insere(X,L1,LT).
+
 
 algo(P,SNous) :-
         write(SNous),
@@ -202,7 +253,7 @@ trouveBeta([[_,Cout]|RSp],Cout2,Alpha):-
         trouveBeta(RSp,Cout,Alpha).
 
 
-% permet de récupérer tout les éléments a comparer d'un étage
+% permet de rÃ©cupÃ©rer tout les Ã©lÃ©ments a comparer d'un Ã©tage
 recupPremElem([],Acc,Acc).
 recupPremElem([[X|_]|L],Acc,R):-
         recupPremElem(L,[X|Acc],R).
@@ -219,3 +270,72 @@ test2(Sp,S,R):-
         etageSuivant([[[Sp,Cout]]],S,0,[],L),
         recupPremElem(L,[],LL),
         trouveBeta(LL,0,R). 
+
+
+
+
+
+%[[[[x,l,l,l,l,l,l,l,l],3],[[l,l,l,l,l,l,l,l,l],0]],[[[l,x,l,l,l,l,l,l,l],2],[[l,l,l,l,l,l,l,l,l],0]],[[[l,l,l,l,x,l,l,l,l],4],[[l,l,l,l,l,l,l,l,l],0]],[[[l,l,l,l,l,l,l,l,x],3],[[l,l,l,l,l,l,l,l,l],0]]]
+tri2([],[]).
+tri2([X|L],LT):-
+        tri2(L,L1),
+        write(L1),
+        insertion(X,L1,LT).
+
+insertion(X,[],[X]). 
+%1ere insertion C1>=C2
+insertion([[L1,C1]|L],[[[L2,C2]|M]],[[[L1,C1]|L],[[L2,C2]|M]]):- 
+        C1>=C2,
+       /* write(C1),*/
+        write(C2).
+
+%Autre insertion C1>=C2
+insertion([[L1,C1]|L],[[[X,C2],Y]|L2],[[[L1,C1]|L],[[X,C2],Y]|L2]):- 
+        C1>=C2,
+        write(C1),
+        write(L),
+        write(C2),
+        write(L2),
+        write(Y),
+        write(X),!.      
+ 
+%1ere insertion C1<C2
+insertion([[L1,C1]|L],[[[L2,C2]|M]],[[[L2,C2]|M]|M2]):- 
+        C1<C2,
+        write(C1),
+        /*write(C2),
+        write(M),
+        write(M2),*/
+        insertion([[L1,C1]|L],[],M2),!.
+
+%Autre insertion C1<C2
+insertion([[L1,C1]|L],[[[X,C2],Y]|L2],[[[X,C2]|[Y]]|M2]):- 
+        C1<C2,
+        write(C1),
+        write(C2),
+        write(L2),
+        write(Y),
+        write(X),
+        insertion([[L1,C1]|L],L2,M2),!.        
+
+
+
+%tri2([[[[x,l,l,l,l,l,l,l,l],3],[[l,l,l,l,l,l,l,l,l],0]],[[[l,x,l,l,l,l,l,l,l],4],[[l,l,l,l,l,l,l,l,l],0]],[[[l,l,l,l,x,l,l,l,l],2],[[l,l,l,l,l,l,l,l,l],0]],[[[l,l,l,l,l,l,l,l,x],3],[[l,l,l,l,l,l,l,l,l],0]]],L).
+%tri2([[[[x,l,l,l,l,l,l,l,l],4],[[l,l,l,l,l,l,l,l,l],0]],[[[l,x,l,l,l,l,l,l,l],3],[[l,l,l,l,l,l,l,l,l],0]],[[[l,l,l,l,x,l,l,l,l],2],[[l,l,l,l,l,l,l,l,l],0]],[[[l,l,l,l,l,l,l,l,x],1],[[l,l,l,l,l,l,l,l,l],0]]],L).
+ 
+tri_insertion([],[]). 
+tri_insertion([X|L],LT):-  
+        tri_insertion(L,L1), 
+        insertionn(X,L1,LT). 
+
+insertionn(X,[],[X]). 
+insertionn(X,[Y|L],[X,Y|L]):- 
+        X>Y,
+        write(L). 
+insertionn(X,[Y|L],[Y|L1]):- 
+        X=<Y,  
+        write(L),  
+        write(L1),  
+        insertionn(X,L,L1). 
+
+%tri_insertion([3,4,2,3],L).
