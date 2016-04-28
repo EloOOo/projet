@@ -3,13 +3,10 @@ package ia;
 import java.util.HashMap;
 
 import se.sics.jasper.SICStus;
-import se.sics.jasper.SPQuery;
+import se.sics.jasper.Query;
 
 
 public class JSicstus {
-	public static void hello(){
-		System.out.println("Bonjour monde");
-	}
 	
 	public static HashMap executeCmd(String cmd) {
 		SICStus sp = null;
@@ -17,9 +14,9 @@ public class JSicstus {
 		try {
 			sp = new SICStus();
 			// Chargement d'un fichier prolog .pl
-			sp.load("UTicTacToe.pl");
-			SPQuery qu = sp.openQuery("adversaire(x,A).",results);
-			
+			sp.load("../prolog/UTicTacToe.pl");
+			Query qu = sp.openQuery(cmd, results);
+
 			//fermeture de la requète
 			qu.close();
 

@@ -231,9 +231,9 @@ void *startServeurJava(void *arg)
 {
     int a = *((int *) arg);
     if(a == 1) 
-        system("java -classpath ../../bin/ ia.Main 4444 0");
+        system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:../../bin/\" ia.Main 4444 0");
     else 
-        system("java -classpath ../../bin/ ia.Main 5555 1");
+        system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:./../bin/\" ia.Main 5555 1");
     free(arg);
     pthread_exit(NULL);
 }

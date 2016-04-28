@@ -37,7 +37,8 @@ public class Main
 		try 
 		{
 		    srv = new ServerSocket(port) ;
-		    Socket s = srv.accept() ;
+		    Socket s = srv.accept();
+			String cmd;
 		    OutputStream os =  s.getOutputStream();	
 		    InputStream is = s.getInputStream();		    
 		    char prevPlat;
@@ -46,11 +47,12 @@ public class Main
 		    
 			while(pu.getPartieFinie() == false) {
 				isGagne=0;
-		    	prevPlat =  (char) is.read();
+				cmd = "";
+				prevPlat =  (char) is.read();
 		    	prevSP = is.read();
 		    	nbSpGagneBis = is.read();
 				System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
-		    
+				
 				// Actualiser le plateau avec la case adverse 
 				if (nbSpGagneBis > nbSpGagne && ccA == EContenuCase.croix)
 					isGagne = 1;
@@ -60,11 +62,12 @@ public class Main
 				nbSpGagne = nbSpGagneBis;
 				
 				// Consulter prolog
-				JSicstus.hello();
-				res = JSicstus.executeCmd("algo([[d,[l,l,l,l,l,l,l,l,l]], [d,[l,l,l,l,l,l,l,l,l]],[d,[l,l,l,l,l,l,l,l,l]],[l,l,l,l,l,l,l,l,l]],[d,[l,l,l,l,l,l,l,l,l]],[d,[l,l,l,l,l,l,l,l,l]],[d,[l,l,l,l,l,l,l,l,l]],[d,[l,l,l,l,l,l,l,l,l]],[d,[l,l,l,l,l,l,l,l,l]]],x).");
+				cmd = "algo(" + pu.toString() + ",x,Res).";
+				JSicstus.executeCmd(cmd);
+				// format de case une liste contenant [Sp,numCase,caseGagne,UltimateGagne]
+				
 
-
-				System.out.println("Java -- Resultat ==>  " + res);
+				//System.out.println("Java -- Resultat ==>  " + res);
 				// Actualiser le plateau avec la case de prolog  
 				// pu.actualiserUPlateau(prologPlat, prologSP, prologGagne, ccJ);
 				// actualiser nbSpGagne
@@ -86,6 +89,6 @@ public class Main
 		{
 			//System.err.println("Exception Serveur Java : " + e);
 			//e.printStackTrace();
-		}	
+		}
 	}
 }
