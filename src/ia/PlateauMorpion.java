@@ -31,6 +31,22 @@ public class PlateauMorpion {
 		this.estGagne = estGagne;
 	}
 	
+	
+	public void actualiserPlateau(int numCase, EContenuCase s, int gagne) {
+		for (int i=0; i<3;i++){
+			for (int j=0; j<3;j++){
+				if((i+1)*(j+1)== numCase)
+					grille[i][j] = s;
+			}
+		}
+		if (gagne == 1)
+			estGagne = EEtatGrille.Croix;
+		else if (gagne == 2)
+			estGagne = EEtatGrille.Rond;
+		//else if (gagne == 3)
+		//	estGagne = EEtatGrille.Egalite;
+	}
+	
 	// [d,[1,2,3,4,5,6,7,8,9]]
 	public String toString() {
 		String str = "[";

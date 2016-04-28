@@ -40,7 +40,7 @@ TypCase demandeCaseUser(){
     return tc;
 }
 
-int connectJava(int s){
+int connectJava(int s) {
     int sock, err, port;
     
     if(s == 1) port = 4444; else port = 5555;
@@ -231,9 +231,9 @@ void *startServeurJava(void *arg)
 {
     int a = *((int *) arg);
     if(a == 1) 
-        system("java -classpath ../../bin/ ia.Main 4444");
+        system("java -classpath ../../bin/ ia.Main 4444 0");
     else 
-        system("java -classpath ../../bin/ ia.Main 5555");
+        system("java -classpath ../../bin/ ia.Main 5555 1");
     free(arg);
     pthread_exit(NULL);
 }
