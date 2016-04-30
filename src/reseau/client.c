@@ -11,7 +11,9 @@
 
  
 int main(int argc, char **argv){
-    system("javac -classpath \"../../include/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
+    // system("javac -classpath \"../../include/sicstus/lib/sicstus/bin/jasper.jar:../../include/sicstus/lib/sicstus/bin/prologbeans.jar\"  -d \"../../bin/\" ../ia/*.java");
+    system("export LD_LIBRARY_PATH=/usr/local/sicstus4.3.2/lib/");
+    system("javac -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar\"  -d \"../../bin/\" ../ia/*.java");
     int sock, sockJava, symbole ,partieFinie = 0;             
     TypPartieReq requetePartie;
     TypPartieRep reponsePartie;
