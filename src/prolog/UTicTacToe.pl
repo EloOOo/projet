@@ -149,7 +149,7 @@ testProfondeur(P,_,_) :-
 /*
 
 alphabeta([],_,_,_,_,_,_,_).
-
+ 
 alphabeta([E|L],1,P,A,B,Meilleur,V,IA) :-
         testProfondeur(P,E,1), % Feuille atteinte ou fin de partie
         heur(E,1,ValE,IA), % Evaluation de la position dans ValE
