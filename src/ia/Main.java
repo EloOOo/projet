@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 
 public class Main 
 {
@@ -21,15 +20,18 @@ public class Main
 		ServerSocket srv;
 		int port = Integer.parseInt(args[0]);
 		int symbole = Integer.parseInt(args[1]); // 0 ->croix 1-> rond
+		char symb;
 		EContenuCase ccJ , ccA;
 		
 		if(symbole == 0) {
 			ccJ = EContenuCase.croix;
 			ccA = EContenuCase.rond;
+			symb = 'x';
 		}
 		else {
 			ccA = EContenuCase.croix;
 			ccJ = EContenuCase.rond;
+			symb = 'o';
 		}
 		
 		Case c =  new Case(EPlateau.D,ESousPlateau.HUIT);
@@ -38,16 +40,13 @@ public class Main
 		{
 		    srv = new ServerSocket(port) ;
 		    Socket s = srv.accept();
-			String cmd;
 		    OutputStream os =  s.getOutputStream();	
 		    InputStream is = s.getInputStream();		    
 		    char prevPlat;
 	    	int prevSP, isGagne=0, nbSpGagne = 0, nbSpGagneBis = 0;  
-		    HashMap res;
 		    
 			while(pu.getPartieFinie() == false) {
 				isGagne=0;
-				cmd = "";
 				prevPlat =  (char) is.read();
 		    	prevSP = is.read();
 		    	nbSpGagneBis = is.read();
@@ -62,12 +61,11 @@ public class Main
 				nbSpGagne = nbSpGagneBis;
 				
 				// Consulter prolog
-				cmd = "algo(" + pu.toString() + ",x,Res).";
-				JSicstus.executeCmd(cmd);
+				
+				JSicstus.executeCmd("algo", pu.toString(), symb);
 				// format de case une liste contenant [Sp,numCase,caseGagne,UltimateGagne]
 				
-
-				//System.out.println("Java -- Resultat ==>  " + res);
+				
 				// Actualiser le plateau avec la case de prolog  
 				// pu.actualiserUPlateau(prologPlat, prologSP, prologGagne, ccJ);
 				// actualiser nbSpGagne
