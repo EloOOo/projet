@@ -8,7 +8,7 @@ symbole(x).
 symbole(o).
 libre(l).
 
-%vérifie si SP gagnant
+%verifie si SP gagnant
 winSousPlateau([S,S,S,_,_,_,_,_,_],S).
 winSousPlateau([_,_,_,S,S,S,_,_,_],S).
 winSousPlateau([_,_,_,_,_,_,S,S,S],S).
@@ -18,7 +18,7 @@ winSousPlateau([_,_,S,_,_,S,_,_,S],S).
 winSousPlateau([S,_,_,_,S,_,_,_,S],S).
 winSousPlateau([_,_,S,_,S,_,S,_,_],S).
 
-%vérifie si P gagnant
+%verifie si P gagnant
 winPlateau([[S,_], [S,_],[S,_],[_,_],[_,_],[_,_],[_,_],[_,_],[_,_]]):-!.
 winPlateau([[_,_], [_,_],[_,_],[S,_],[S,_],[S,_],[_,_],[_,_],[_,_]]):-!.
 winPlateau([[_,_], [_,_],[_,_],[_,_],[_,_],[_,_],[S,_],[S,_],[S,_]]):-!.
@@ -29,30 +29,41 @@ winPlateau([[S,_], [_,_],[_,_],[_,_],[S,_],[_,_],[_,_],[_,_],[S,_]]):-!.
 winPlateau([[_,_], [_,_],[S,_],[_,_],[S,_],[_,_],[S,_],[_,_],[_,_]]):-!.
 
 %Placements possibles d'un symbole dans SP
-move([[l,B,C,D,E,F,G,H,I],_], S, J,[[S,B,C,D,E,F,G,H,I],Cout]):-
+moveP([[l,B,C,D,E,F,G,H,I],_], S, J,[[S,B,C,D,E,F,G,H,I],Cout]):-
         evalSousPlateau([S,B,C,D,E,F,G,H,I],S,J,Cout).
-move([[A,l,C,D,E,F,G,H,I],_], S, J,[[A,S,C,D,E,F,G,H,I],Cout]):-
+moveP([[A,l,C,D,E,F,G,H,I],_], S, J,[[A,S,C,D,E,F,G,H,I],Cout]):-
         evalSousPlateau([A,S,C,D,E,F,G,H,I],S,J,Cout).
-move([[A,B,l,D,E,F,G,H,I],_], S, J,[[A,B,S,D,E,F,G,H,I],Cout]):-
+moveP([[A,B,l,D,E,F,G,H,I],_], S, J,[[A,B,S,D,E,F,G,H,I],Cout]):-
         evalSousPlateau([A,B,S,D,E,F,G,H,I],S,J,Cout).
-move([[A,B,C,l,E,F,G,H,I],_], S, J,[[A,B,C,S,E,F,G,H,I],Cout]):-
+moveP([[A,B,C,l,E,F,G,H,I],_], S, J,[[A,B,C,S,E,F,G,H,I],Cout]):-
         evalSousPlateau([A,B,C,S,E,F,G,H,I],S,J,Cout).
-move([[A,B,C,D,l,F,G,H,I],_], S, J,[[A,B,C,D,S,F,G,H,I],Cout]):-
+moveP([[A,B,C,D,l,F,G,H,I],_], S, J,[[A,B,C,D,S,F,G,H,I],Cout]):-
         evalSousPlateau([A,B,C,D,S,F,G,H,I],S,J,Cout).
-move([[A,B,C,D,E,l,G,H,I],_], S, J,[[A,B,C,D,E,S,G,H,I],Cout]):-
+moveP([[A,B,C,D,E,l,G,H,I],_], S, J,[[A,B,C,D,E,S,G,H,I],Cout]):-
         evalSousPlateau([A,B,C,D,E,S,G,H,I],S,J,Cout).
-move([[A,B,C,D,E,F,l,H,I],_], S, J,[[A,B,C,D,E,F,S,H,I],Cout]):-
+moveP([[A,B,C,D,E,F,l,H,I],_], S, J,[[A,B,C,D,E,F,S,H,I],Cout]):-
         evalSousPlateau([A,B,C,D,E,F,S,H,I],S,J,Cout).
-move([[A,B,C,D,E,F,G,l,I],_], S, J,[[A,B,C,D,E,F,G,S,I],Cout]):-
+moveP([[A,B,C,D,E,F,G,l,I],_], S, J,[[A,B,C,D,E,F,G,S,I],Cout]):-
         evalSousPlateau([A,B,C,D,E,F,G,S,I],S,J,Cout).
-move([[A,B,C,D,E,F,G,H,l],_], S, J,[[A,B,C,D,E,F,G,H,S],Cout]):-
+moveP([[A,B,C,D,E,F,G,H,l],_], S, J,[[A,B,C,D,E,F,G,H,S],Cout]):-
         evalSousPlateau([A,B,C,D,E,F,G,H,S],S,J,Cout).
+
+
+move([l,B,C,D,E,F,G,H,I], S,[S,B,C,D,E,F,G,H,I]).
+move([A,l,C,D,E,F,G,H,I], S,[A,S,C,D,E,F,G,H,I]).
+move([A,B,l,D,E,F,G,H,I], S,[A,B,S,D,E,F,G,H,I]).
+move([A,B,C,l,E,F,G,H,I], S,[A,B,C,S,E,F,G,H,I]).
+move([A,B,C,D,l,F,G,H,I], S,[A,B,C,D,S,F,G,H,I]).
+move([A,B,C,D,E,l,G,H,I], S,[A,B,C,D,E,S,G,H,I]).
+move([A,B,C,D,E,F,l,H,I], S,[A,B,C,D,E,F,S,H,I]).
+move([A,B,C,D,E,F,G,l,I], S,[A,B,C,D,E,F,G,S,I]).
+move([A,B,C,D,E,F,G,H,l], S,[A,B,C,D,E,F,G,H,S]).
 
 %Changement de joueur
 adversaire(x,o).
 adversaire(o,x).
 
-%test si le plateau est gagné
+%test si le plateau est gagne
 win(S,Plateau):-
         symbole(S),
         winPlateau(Plateau).
@@ -101,7 +112,7 @@ evalSousPlateau(Sp,SNous,J,Cout):-
         comptLignePG(Sp,SJ2,Cout2),
         formuleEval(Cout1,Cout2,J,Cout).
 
-%Calcul de l'évaluation d'un SP
+%Calcul de l'evaluation d'un SP
 formuleEval(Cout1,Cout2,0,Cout):-
         Cout is Cout1 - Cout2.
 formuleEval(Cout1,Cout2,1,Cout):-
@@ -123,7 +134,7 @@ profondeur(SP,S,_,_,_,LR) :-
 profondeur([[SP|P]],S,J,Max,Sol) :-
         /*Max> 0,*/
         Max1 is Max- 1,
-        move(SP,S,J,R),
+        moveP(SP,S,J,R),
         nonmember(R,P),
         verifSPGagnantP([[R|[SP|P]]],S,J,Max1,Sol).
 
@@ -140,21 +151,79 @@ verifSPGagnantP(LL,S,J,Max,LR):-
         adversaire(S,A),
         profondeur(LL,A,J1,Max,LR).  
 
-%tentative à completer
+%tentative a completer
 decrProfondeur(P1,P2) :- P2 is P1-1.
 
 testProfondeur(P,_,_) :- 
         P == 0 ; 
         etatFinal(P,_,_).
-/*
 
-alphabeta([],_,_,_,_,_,_,_).
- 
-alphabeta([E|L],1,P,A,B,Meilleur,V,IA) :-
-        testProfondeur(P,E,1), % Feuille atteinte ou fin de partie
-        heur(E,1,ValE,IA), % Evaluation de la position dans ValE
-        ((A=<ValE, % Evaluation meilleure
-          alphabeta(L,1,P,A,B,MeilleurL,ValL,IA),
-          recordMin(ValE,ValL,E,MeilleurL,Meilleur,V))
-         ;
-         copie(E,ValE,Meilleur,V)). % Memorisation du meilleu*/
+% alphabeta(6,[x,l,o,l,l,x,l,o,l],x,-10000,10000,Move,_).
+
+% l'adversaire gagne on s'arrete
+alphaBeta(_,Sp,S,_,_,0,-1000):-
+        adversaire(S,A),
+        winSousPlateau(Sp,A).
+% lors de l'appel Alpha = Tres Grand nb et Beta tres petit (100 et -100)
+alphaBeta(Prof,Sp,S, Alpha,Beta,Move,Cout):- 
+        Prof > 0,
+        bestMoves(Sp,S,LMove),
+        LMove = [_|_], !, % on vï¿½rifie si la liste contient 1 seul ï¿½lï¿½ment ou +
+        Prof1 is Prof- 1,
+        Alpha1 is -Beta,
+        Beta1 is -Alpha,
+        meilleurChoix(LMove, Sp, S,Prof1, Alpha1, Beta1, 0, Move, Cout).
+alphaBeta(_, Sp, S, _, _, 0, Cout):-
+        value(Sp, S,Cout).
+                
+meilleurChoix([H|T], Sp, S, Prof, Alpha, Beta, Move0, Move1, Cout1):-
+        move(Sp, S, NewSp), !,
+        adversaire(S,A),
+        alphaBeta(Prof, NewSp, A, Alpha, Beta, _, CoutMin),
+        Cout is -CoutMin,
+        cutoff(H, Cout, Prof, Alpha, Beta, T, Sp, S, Move0, Move1, Cout1).
+meilleurChoix([], _, _, _, Alpha, _, Move, Move, Alpha).
+
+cutoff(_, Cout, Prof, Alpha, Beta, LstMove, Sp, S, Move0, Move1, Value1):-
+        Cout =< Alpha, !,
+        meilleurChoix(LstMove, Sp, S, Prof, Alpha, Beta, Move0, Move1, Value1).
+cutoff(Move, Cout, Prof, _, Beta, LstMove, Sp, S, _, Move1, Value1):-
+        Cout < Beta, !,
+        meilleurChoix(LstMove, Sp, S, Prof, Cout, Beta, Move, Move1, Value1).
+cutoff(Move, Cout, _, _, _, _, _, _, _, Move, Cout).
+
+premiereDiff([_|T], [_|T], 0):- !.
+premiereDiff([H|T], [H|T2], Index):-
+        premiereDiff(T, T2, Index1),
+        !,
+        Index is Index1+1.
+
+remplaceOcc([_|T], 0, X, [X|T]).
+remplaceOcc([H|T], I, X, [H|R]):- 
+        I > -1, 
+        NI is I-1, 
+        remplaceOcc(T, NI, X, R), !.
+remplaceOcc(L, _, _, L).
+
+% Dï¿½placement gagnant
+bestMoves(Sp,S,[Move]):-
+        move(Sp,S,Move),
+        winSousPlateau(Move,S), !.
+% Si l'adversaire peut gagner avec ce move on l'empeche
+bestMoves(Sp,S,[Move]):-
+        adversaire(S,A),
+        move(Sp, A,Move2),
+        winSousPlateau(Move2,A),
+        premiereDiff(Sp,Move2,I),
+        remplaceOcc(Sp,I,S,Move),!.
+bestMoves(Sp,S,LstMove):-
+        findall(Move, move(Sp,S,Move), LstMove).
+
+value(Sp, S,-1000):-
+        adversaire(S,A),    
+        winSousPlateau(Sp,A), !.
+value(Sp, S,Cout):-
+        adversaire(S,A),
+        evalSousPlateau(Sp,S,0,CoutJ),
+        evalSousPlateau(Sp,A,1,CoutA),
+        Cout is 2 * CoutJ  - CoutA.
