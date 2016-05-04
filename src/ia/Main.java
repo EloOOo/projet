@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import se.sics.jasper.SPTerm;
+
 public class Main 
 {
 	public static void main(String[] args) 
@@ -62,9 +64,9 @@ public class Main
 				
 				// Consulter prolog
 				
-				JSicstus.executeCmd("algo", pu.toString(), symb);
+				SPTerm move = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
 				// format de case une liste contenant [Sp,numCase,caseGagne,UltimateGagne]
-				
+				//System.out.println("Move de prolog : " + move);
 				
 				// Actualiser le plateau avec la case de prolog  
 				// pu.actualiserUPlateau(prologPlat, prologSP, prologGagne, ccJ);
