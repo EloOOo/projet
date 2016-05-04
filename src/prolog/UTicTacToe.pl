@@ -314,7 +314,7 @@ value(Sp, S,Cout):-
 %testJava([[x,x,x,x,x,x,x,x],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[x,l,x,x,x,x,x,x,x],1,x,SpPlay,CasePlay,L).
 
 
-testJava(PlatU,Sps,0,S,SpPlay,CasePlay,NbSPG) :-
+testJava(PlatU,Sps,10,S,SpPlay,CasePlay,NbSPG) :-
         trouveSPLibre(Sps,SpPlay),
         nth1(SpPlay, PlatU, Sp),
         alphaBeta(6,Sp,S, -10000,10000,Move,_,_,CasePlay),

@@ -72,7 +72,7 @@ int getSPlatInt(TypSousPlat tsp){
         case SEPT: return 7;
         case HUIT: return 8;
         case NEUF: return 9;
-        default: return 0;
+        default: return 10;
     }
 }
 

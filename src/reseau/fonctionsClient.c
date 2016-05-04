@@ -59,7 +59,7 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     int err, spPrec;
     char p, platPrec;
 
-    int16_t sp, nbSpwin;
+    int32_t sp, nbSpwin;
 
     platPrec = getPlatChar(coupPrec.numPlat); 
     printf("C -Envoi\n");
@@ -240,7 +240,7 @@ void *startServeurJava(void *arg)
     if(a == 1) 
         system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:../../bin/\" ia.Main 4444 0");
     else 
-        system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:../../bin/\" ia.Main 5555 0");
+        system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:../../bin/\" ia.Main 5555 1");
     free(arg);
     pthread_exit(NULL);
 }
