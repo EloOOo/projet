@@ -57,10 +57,10 @@ int connectJava(int s) {
 
 TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     TypCase tc;
-    int err, spPrec, nbSpwin;
+    int err, spPrec;
     char p, platPrec;
 
-    int16_t sp;
+    int16_t sp, nbSpwin;
 
     platPrec = getPlatChar(coupPrec.numPlat); 
     printf("Envoi\n");
@@ -87,7 +87,7 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     }
     printf("Sous Plateau %d \n", sp);
     tc.numSousPlat = intToTypSP(sp);
-    
+
     err = recv(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);

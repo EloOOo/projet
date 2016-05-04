@@ -203,12 +203,12 @@ alphaBeta(_, Sp, S, _, _, 0,_, Cout,posS):-
 */
 
 %testSPDispo([l,l,l,o,l,o,l,l,l],5,Res).
-%test si le SP ou on doit joué est déjà gagné
+%test si le SP ou on doit jouï¿½ est dï¿½jï¿½ gagnï¿½
 testSPDispo(Sps,PosSP,0):-
          nth1(PosSP, Sps, S),
          S = l.
           
-% 1 = SP Gagné         
+% 1 = SP Gagnï¿½         
 testSPDispo(Sps,PosSP,1):-
          nth1(PosSP, Sps, S),
          S \= l.
@@ -230,7 +230,7 @@ testCoup(Plateau,PlateauSimple,Prof,Sp,S, Alpha,Beta,Move,LMove,Cout,PosS,0):-
         recupSPdansP(PosS,Plateau,SpAdv),
         adversaire(S,A),
         alphaBeta(Prof,SpAdv,A, Alpha,Beta,Move2,_,_,_),
-        %move2 gagnant mettre à jour le PlateauSimple, tester si c'est gagnant pour adv
+        %move2 gagnant mettre ï¿½ jour le PlateauSimple, tester si c'est gagnant pour adv
         winSousPlateau(Move2,A),
         movePos(PlateauSimple, A,NPS,PosS),
         write(NPS),
@@ -303,23 +303,29 @@ value(Sp, S,Cout):-
         evalSousPlateau(Sp,A,1,CoutA),
         Cout is 2 * CoutJ  - CoutA.
 
-testJavaMove(5).
-testJavaCase(6).
 %Si num = 0 -->jouer partout -->1er coup croix
 %PlatU ->plateau complet
 %Sps ->plateau simple
-%num ->num du SP ou joué
-%SpPlay ->num du SP ou prolog à joué
-%CasePlay ->num de la case joué dans le SP
+%num ->num du SP ou jouï¿½
+%SpPlay ->num du SP ou prolog ï¿½ jouï¿½
+%CasePlay ->num de la case jouï¿½ dans le SP
 
 %testJava([[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[l,x,l,l,l,l,l,l,l],1,x,SpPlay,CasePlay,L).
 %testJava([[x,x,x,x,x,x,x,x],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[x,l,x,x,x,x,x,x,x],1,x,SpPlay,CasePlay,L).
-/*testJava(PlatU,Sps,0,S,SpPlay,CasePlay,NbSPG) :-
-        %gestion du parcours des SP libre
-        write(PlatU),nl,write(Sps),nl,write(S),nl,write(0),
-        testJavaMove(SpPlay),testJavaCase(CasePlay).*/
 
-%le SP donné est libre
+
+testJava(PlatU,Sps,0,S,SpPlay,CasePlay,NbSPG) :-
+        trouveSPLibre(Sps,SpPlay),
+        nth1(SpPlay, PlatU, Sp),
+        alphaBeta(6,Sp,S, -10000,10000,Move,_,_,CasePlay),
+        winSousPlateau(Move,S),
+        movePos(Sps,S,Nps,SpPlay),
+        compteSPG(Nps,S,NbSPG);
+        trouveSPLibre(Sps,SpPlay),
+        nth1(SpPlay, PlatU, Sp),
+        alphaBeta(6,Sp,S, -10000,10000,_,_,_,CasePlay),
+        compteSPG(Sps,S,NbSPG).
+%le SP donnï¿½ est libre
 testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         testSPDispo(Sps,Num,Libre),
         Libre is 0,
@@ -336,7 +342,7 @@ testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         alphaBeta(6,Sp,S, -10000,10000,_,_,_,CasePlay),
         compteSPG(Sps,S,NbSPG).
 
-%le SP donné est gagné ou nulle -> il faut jouer dans un autre SP (libre)
+%le SP donnï¿½ est gagnï¿½ ou nulle -> il faut jouer dans un autre SP (libre)
 testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         testSPDispo(Sps,Num,Libre),
         Libre is 1,

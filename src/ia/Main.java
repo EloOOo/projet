@@ -50,7 +50,10 @@ public class Main
 			while(pu.getPartieFinie() == false) {
 				prevPlat =  (char) is.read();
 		    	prevSP = is.read();
-		    	System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
+		    	
+		    	// on recoit le coup fictif [Z,0] si on est le premier coup
+		    	if(prevPlat != 'Z' && prevSP != 0)
+		    		System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
 				
 				pu.actualiserUPlateau(prevPlat, prevSP, ccA);
 				
