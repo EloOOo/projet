@@ -312,30 +312,47 @@ testJavaCase(6).
 %SpPlay ->num du SP ou prolog à joué
 %CasePlay ->num de la case joué dans le SP
 
-%testJava([[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[l,l,l,l,l,l,l,l,l],1,x,SpPlay,CasePlay,0).
-%testJava([[x,x,x,x,x,x,x,x],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[x,l,x,x,x,x,x,x,x],1,x,SpPlay,CasePlay,0).
-testJava(PlatU,Sps,0,S,SpPlay,CasePlay,_) :-
+%testJava([[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[l,x,l,l,l,l,l,l,l],1,x,SpPlay,CasePlay,L).
+%testJava([[x,x,x,x,x,x,x,x],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[x,l,x,x,x,x,x,x,x],1,x,SpPlay,CasePlay,L).
+/*testJava(PlatU,Sps,0,S,SpPlay,CasePlay,NbSPG) :-
         %gestion du parcours des SP libre
         write(PlatU),nl,write(Sps),nl,write(S),nl,write(0),
-        testJavaMove(SpPlay),testJavaCase(CasePlay).
+        testJavaMove(SpPlay),testJavaCase(CasePlay).*/
 
 %le SP donné est libre
-testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,_) :-
+testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         testSPDispo(Sps,Num,Libre),
         Libre is 0,
         SpPlay is Num,
         nth1(Num, PlatU, Sp),
         alphaBeta(6,Sp,S, -10000,10000,Move,_,_,CasePlay),
-        write(Move).
+        winSousPlateau(Move,S),
+        movePos(Sps,S,Nps,SpPlay),
+        compteSPG(Nps,S,NbSPG);
+        testSPDispo(Sps,Num,Libre),
+        Libre is 0,
+        SpPlay is Num,
+        nth1(Num, PlatU, Sp),
+        alphaBeta(6,Sp,S, -10000,10000,_,_,_,CasePlay),
+        compteSPG(Sps,S,NbSPG).
 
 %le SP donné est gagné ou nulle -> il faut jouer dans un autre SP (libre)
-testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,_) :-
+testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         testSPDispo(Sps,Num,Libre),
         Libre is 1,
         trouveSPLibre(Sps,SpPlay),
         nth1(SpPlay, PlatU, Sp),
         alphaBeta(6,Sp,S, -10000,10000,Move,_,_,CasePlay),
-        write(Move).
+        winSousPlateau(Move,S),
+        movePos(Sps,S,Nps,SpPlay),
+        compteSPG(Nps,S,NbSPG);
+        testSPDispo(Sps,Num,Libre),
+        Libre is 1,
+        trouveSPLibre(Sps,SpPlay),
+        nth1(SpPlay, PlatU, Sp),
+        alphaBeta(6,Sp,S, -10000,10000,_,_,_,CasePlay),
+        compteSPG(Sps,S,NbSPG).
+        
 
 %trouveSPLibre([l,x,o,l,l,l,l,l,l],PosSp).
 trouveSPLibre([],1).
@@ -346,4 +363,18 @@ trouveSPLibre([_|R],PosSp1):-
         trouveSPLibre(R,PosSp),
         PosSp1 is PosSp+1.
  
-                       
+%compteSPG([x,x,x,l,l,l,l,l,l],_,NbSPG).
+compteSPG([],_,0).
+compteSPG([Symbole|R],S,PosSp1):-
+        Symbole = S,
+        compteSPG(R,S,PosSp),
+        PosSp1 is PosSp+1.
+compteSPG([_|R],S,PosSp):-
+        compteSPG(R,S,PosSp).       
+                    
+/*compte([],0):-!.
+compte([S|X],S,Y):-
+    compte(X,S,D),
+    Y is D+1.
+compte([c|X],S,Y):-
+    compte(X,Y).*/   
