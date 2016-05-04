@@ -1,7 +1,7 @@
 package ia;
 
 public enum EContenuCase {
-	vide('v'),
+	libre('l'),
 	rond('o'),
 	croix('x');
 	

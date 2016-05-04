@@ -12,6 +12,10 @@ public enum EEtatGrille {
 	
 	private char symbole;
 	
+	public char getS(){
+		return symbole;
+	}
+	
 	public String toString(){
 		return ""+symbole;
 	}

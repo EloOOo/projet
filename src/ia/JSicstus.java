@@ -1,35 +1,29 @@
 package ia;
 
+import java.util.HashMap;
+
 import se.sics.jasper.SICStus;
-import se.sics.jasper.SPPredicate;
-import se.sics.jasper.SPQuery;
 import se.sics.jasper.SPTerm;
 
 public class JSicstus {
 	
-	public static SPTerm findMove(String cmd, String plateau, String SpSimple, int numSp,char symbole) {
+	public static Coup findMove(String cmd, String plateau, String SpSimple, int numSp,char symbole) {
 		SICStus sp = null;
-		SPQuery q = null;
-		SPPredicate pred;
-		SPTerm p,sps, nSP,s, res = null;
-		
+		HashMap varMap = new HashMap();
+		Coup c = null;
 		try {
 			sp = new SICStus();
-			pred = new SPPredicate(sp, cmd, 5, "");
-			p = new SPTerm(sp, plateau);
-		    sps = new SPTerm(sp, SpSimple);
-		    nSP = new SPTerm(sp, numSp);
-		    s = new SPTerm(sp, symbole);
-		  
-		    res = new SPTerm(sp).putVariable();
-		    
+			
 			// Chargement d'un fichier prolog .pl
 			sp.load("../prolog/UTicTacToe.pl");
-			q = sp.openQuery(pred, new SPTerm[] {p,sps,nSP,s,res});
-			System.out.println("Test " + res);
-			//fermeture de la requète
-			q.close();
-
+			String str = cmd + "(" + plateau+ "," + SpSimple + "," + numSp +"," + symbole + ",SousPlateau,Case,NbSpWin)."; 
+			if(sp.query(str, varMap)) 
+			{
+				int sousPlat = Integer.parseInt(((SPTerm)varMap.get("SousPlateau")).toString());
+				int ncase = Integer.parseInt(((SPTerm)varMap.get("Case")).toString());
+				int spWin = Integer.parseInt(((SPTerm)varMap.get("NbSpWin")).toString());
+				c = new Coup(sousPlat,ncase,spWin);
+			}		
 		}
 		catch (Exception e) {
 			System.err.println("Exception SICStus Prolog : " + e);
@@ -37,6 +31,6 @@ public class JSicstus {
 			System.exit(-2);
 		}
 		
-		return res;
+		return c;
 	}
 }

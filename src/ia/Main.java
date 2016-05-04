@@ -22,18 +22,18 @@ public class Main
 		ServerSocket srv;
 		int port = Integer.parseInt(args[0]);
 		int symbole = Integer.parseInt(args[1]); // 0 ->croix 1-> rond
-		char symb;
 		EContenuCase ccJ , ccA;
+		char symb;
 		
 		if(symbole == 0) {
 			ccJ = EContenuCase.croix;
 			ccA = EContenuCase.rond;
-			symb = 'x';
+			symb ='x';
 		}
 		else {
 			ccA = EContenuCase.croix;
 			ccJ = EContenuCase.rond;
-			symb = 'o';
+			symb ='o';
 		}
 		
 		Case c =  new Case(EPlateau.D,ESousPlateau.HUIT);
@@ -45,37 +45,28 @@ public class Main
 		    OutputStream os =  s.getOutputStream();	
 		    InputStream is = s.getInputStream();		    
 		    char prevPlat;
-	    	int prevSP, isGagne=0, nbSpGagne = 0, nbSpGagneBis = 0;  
-		    
+	    	int prevSP, nbSpGagne;
+	    	
 			while(pu.getPartieFinie() == false) {
-				isGagne=0;
 				prevPlat =  (char) is.read();
 		    	prevSP = is.read();
-		    	nbSpGagneBis = is.read();
-				System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
+		    	System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
 				
-				// Actualiser le plateau avec la case adverse 
-				if (nbSpGagneBis > nbSpGagne && ccA == EContenuCase.croix)
-					isGagne = 1;
-				else if (nbSpGagneBis > nbSpGagne && ccA == EContenuCase.rond)
-					isGagne = 2;
-				pu.actualiserUPlateau(prevPlat, prevSP, isGagne, ccA);
-				nbSpGagne = nbSpGagneBis;
+				pu.actualiserUPlateau(prevPlat, prevSP, ccA);
 				
 				// Consulter prolog
-				
-				SPTerm move = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
-				// format de case une liste contenant [Sp,numCase,caseGagne,UltimateGagne]
-				//System.out.println("Move de prolog : " + move);
+				Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
+				//Coup play = JSicstus.findMove("testJava", "[[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]]", "[l,l,l,l,l,l,l,l,l]", 1, 'x');
+				System.out.println(play);
+				nbSpGagne = play.getNbSpGagne();
 				
 				// Actualiser le plateau avec la case de prolog  
-				// pu.actualiserUPlateau(prologPlat, prologSP, prologGagne, ccJ);
-				// actualiser nbSpGagne
+				pu.actualiserUPlateau(play.getNumCase(), play.getSousPlateau(), ccJ);
 				
 			    //System.out.println("Java -- Envoie d'une case");
-				os.write(c.getNumPlat().getN());
+				os.write(Tools.intToCharSp(play.getSousPlateau()));
 				os.flush();
-		    	os.write(c.getNumSousPlat().getVal());
+		    	os.write(play.getNumCase());
 		    	os.flush();
 		    	os.write(nbSpGagne);
 		    	os.flush();

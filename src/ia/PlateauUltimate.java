@@ -44,11 +44,11 @@ public class PlateauUltimate {
 		return c;
 	}
 
-	public void actualiserUPlateau(int numPlateau, int numCase, int gagne, EContenuCase s) {
+	public void actualiserUPlateau(int numPlateau, int numCase, EContenuCase s) {
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
 				if((i+1)*(j+1)== numPlateau)
-					plateau[i][j].actualiserPlateau(numCase, s, gagne);
+					plateau[i][j].actualiserPlateau(numCase, s);
 			}
 		}
 	}
@@ -59,12 +59,23 @@ public class PlateauUltimate {
 		int c = 1;
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
-				str += plateau[i][j].strEstGagne();
+				str += plateau[i][j].getEstGagne();
 				if (c!=9) str += ",";
 				c++;
 			}
 		}
 		return str +"]";	
+	}
+	
+	public int nbSpGagne(char s) {
+		int c = 0;
+		for (int i=0; i<3;i++){
+			for (int j=0; j<3;j++){
+				if (plateau[i][j].getEstGagne().getS() == s) 
+					c++;
+			}
+		}
+		return c;
 	}
 	
 	// [[1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]]
