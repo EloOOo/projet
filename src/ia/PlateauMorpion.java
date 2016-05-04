@@ -6,7 +6,7 @@ public class PlateauMorpion {
 	
 	public PlateauMorpion() {
 		grille = new EContenuCase[3][3];
-		estGagne = EEtatGrille.Dispo;
+		estGagne = EEtatGrille.Libre;
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
 				grille[i][j] = EContenuCase.vide;
@@ -47,22 +47,31 @@ public class PlateauMorpion {
 		//	estGagne = EEtatGrille.Egalite;
 	}
 	
-	// [d,[1,2,3,4,5,6,7,8,9]]
-	public String toString() {
-		String str = "[";
-		str += estGagne.toString() + ",[";
+	public String strEstGagne() {
+		String str = "[";	
 		int c = 1;
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
-				if (grille[i][j] == EContenuCase.vide) {
-					str += c;
-				} else {
-					str += grille[i][j].toString();
-				}
+				str += estGagne.toString() ;
 				if(c != 9) str += ",";
 				c++;
 			}
 		}
-		return str + "]]";
+		return str + "]";
+	}
+	
+	// [1,2,3,4,5,6,7,8,9]
+	public String toString() {
+		String str = "[";
+		int c = 1;
+		for (int i=0; i<3;i++){
+			for (int j=0; j<3;j++){
+				str += grille[i][j].toString();
+				
+				if(c != 9) str += ",";
+				c++;
+			}
+		}
+		return str + "]";
 	}
 }

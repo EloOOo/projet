@@ -10,7 +10,7 @@ public class PlateauUltimate {
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
 				plateau[i][j] = new PlateauMorpion();
-				plateau[i][j].setEstGagne(EEtatGrille.Dispo);
+				plateau[i][j].setEstGagne(EEtatGrille.Libre);
 			}
 		}
 		
@@ -53,7 +53,21 @@ public class PlateauUltimate {
 		}
 	}
 	
-	// [[d,[1,2,3,4,5,6,7,8,9]], [d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]],[d,[1,2,3,4,5,6,7,8,9]]]
+	// représentation du plateau ultimate sous forme d'un sous plateau simple
+	public String getSpSimple() {
+		String str = "[";
+		int c = 1;
+		for (int i=0; i<3;i++){
+			for (int j=0; j<3;j++){
+				str += plateau[i][j].strEstGagne();
+				if (c!=9) str += ",";
+				c++;
+			}
+		}
+		return str +"]";	
+	}
+	
+	// [[1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]]
 	public String toString() {
 		String str = "[";
 		int c = 1;

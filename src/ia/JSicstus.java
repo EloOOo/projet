@@ -7,24 +7,26 @@ import se.sics.jasper.SPTerm;
 
 public class JSicstus {
 	
-	public static SPTerm executeCmd(String cmd, String plateau, char symbole) {
+	public static SPTerm findMove(String cmd, String plateau, String SpSimple, int numSp,char symbole) {
 		SICStus sp = null;
 		SPQuery q = null;
 		SPPredicate pred;
-		SPTerm spl, numc, res = null;
+		SPTerm p,sps, nSP,s, res = null;
 		
 		try {
 			sp = new SICStus();
-			pred = new SPPredicate(sp, cmd, 3, "");
-			spl = new SPTerm(sp, plateau);
-		    numc = new SPTerm(sp, symbole);
+			pred = new SPPredicate(sp, cmd, 5, "");
+			p = new SPTerm(sp, plateau);
+		    sps = new SPTerm(sp, SpSimple);
+		    nSP = new SPTerm(sp, numSp);
+		    s = new SPTerm(sp, symbole);
 		  
 		    res = new SPTerm(sp).putVariable();
 		    
 			// Chargement d'un fichier prolog .pl
 			sp.load("../prolog/UTicTacToe.pl");
-			q = sp.openQuery(pred, new SPTerm[] {spl, numc, res});
-			
+			q = sp.openQuery(pred, new SPTerm[] {p,sps,nSP,s,res});
+			System.out.println("Test " + res);
 			//fermeture de la requète
 			q.close();
 

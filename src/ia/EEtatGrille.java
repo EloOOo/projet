@@ -4,7 +4,7 @@ public enum EEtatGrille {
 	Egalite('e'),
 	Croix('x'),
 	Rond('o'),
-	Dispo('d');
+	Libre('l');
 	
 	EEtatGrille(char s){
 		symbole = s;
