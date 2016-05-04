@@ -13,7 +13,7 @@
 int main(int argc, char **argv){
     //system("javac -classpath \"../../include/sicstus/lib/sicstus/bin/jasper.jar:../../include/sicstus/lib/sicstus/bin/prologbeans.jar\"  -d \"../../bin/\" ../ia/*.java");
     system("export LD_LIBRARY_PATH=/usr/local/sicstus4.3.2/lib/");
-    system("javac -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar\"  -d \"../../bin/\" ../ia/*.java");
+    system("javac -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
     int sock, sockJava, symbole ,partieFinie = 0;             
     TypPartieReq requetePartie;
     TypPartieRep reponsePartie;
@@ -55,7 +55,7 @@ int main(int argc, char **argv){
     afficheInfoPartie(reponsePartie);
    	
     // Lance le serveur Java automatiquement  + se connceter via la sokcet sockJava
-    if(reponsePartie.symb == CROIX) { // pour les tests A ENLEVER par la suite
+    if(reponsePartie.symb == ROND) { // pour les tests A ENLEVER par la suite
 	    int* arg = malloc(sizeof(*arg));
 	    if ( arg == NULL ) {
 	        fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
@@ -75,8 +75,8 @@ int main(int argc, char **argv){
         if (reponsePartie.symb == CROIX)  
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
-            // TypCase tc = demandeCaseUser();
-            TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
+             TypCase tc = demandeCaseUser();
+            //TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
             
@@ -104,8 +104,8 @@ int main(int argc, char **argv){
             coupAdverse = recoitEtValidCoup(sock);
            
             //demander case, enregistrer la requete, l'envoyer au serveur
-            TypCase tc = demandeCaseUser();
-            //TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
+            //TypCase tc = demandeCaseUser();
+            TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
 

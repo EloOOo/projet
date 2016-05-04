@@ -76,13 +76,17 @@ public class PlateauMorpion {
 	
 	
 	public void actualiserPlateau(int numCase, EContenuCase s) {
+		int c = 0;
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
-				if((i+1)*(j+1)== numCase)
+				if(c== numCase) 
+				{
 					grille[i][j] = s;
+					actualiseWin();
+				}
+				c++;
 			}
 		}
-		actualiseWin();
 	}
 	
 	

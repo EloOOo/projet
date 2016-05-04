@@ -30,4 +30,33 @@ public class Tools {
 		
 		return ch;
 	}
+
+	public static int charToIntSP(char ch) {
+		int i = 0;
+
+		switch(ch) {
+		case 'A' :
+			i = 1; break;
+		case 'B' :
+			i = 2; break;
+		case 'C' :
+			i = 3; break;
+		case 'D' :
+			i = 4; break;
+		case 'E' :
+			i = 5; break;
+		case 'F' :
+			i = 6; break;
+		case 'G' :
+			i = 7; break;
+		case 'H' :
+			i = 8; break;
+		case 'I' :
+			i = 9; break;
+		default :
+			ch = 0; break;
+		}	
+		
+		return 0;
+	}
 }

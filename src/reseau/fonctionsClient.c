@@ -44,7 +44,6 @@ int connectJava(int s) {
     int sock, err, port;
     
     if(s == 1) port = 4444; else port = 5555;
-    printf("-------------Connexion au serveur Java------------------\n");
 
     //Creation de la socket client
     sock =  socketClient("127.0.0.1", port);
@@ -63,7 +62,7 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     int16_t sp, nbSpwin;
 
     platPrec = getPlatChar(coupPrec.numPlat); 
-    printf("Envoi\n");
+    printf("C -Envoi\n");
     err = send(sockJava, &platPrec, sizeof(platPrec), 0);
     if (err < 0) {
         closeExitSocketClient(sockJava);
@@ -74,25 +73,25 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
         closeExitSocketClient(sockJava);
     }
 
-    printf("Reception\n");
+    printf("C -Reception\n");
     err = recv(sockJava, &p, sizeof(p), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
-    printf("Plateau %c\n", p);
+    printf("C -Plateau %c\n", p);
     tc.numPlat = formatPlateau(p);
     err = recv(sockJava, &sp, sizeof(sp), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
-    printf("Sous Plateau %d \n", sp);
+    printf("C -Sous Plateau %d \n", sp);
     tc.numSousPlat = intToTypSP(sp);
 
     err = recv(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
-    printf("Nb Sp gagne %d \n", nbSpwin);
+    printf("C -Nb Sp gagne %d \n", nbSpwin);
 
     return tc;
 }
@@ -241,7 +240,7 @@ void *startServeurJava(void *arg)
     if(a == 1) 
         system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:../../bin/\" ia.Main 4444 0");
     else 
-        system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:./../bin/\" ia.Main 5555 1");
+        system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:../../bin/\" ia.Main 5555 0");
     free(arg);
     pthread_exit(NULL);
 }

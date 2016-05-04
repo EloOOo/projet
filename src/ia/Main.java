@@ -1,11 +1,10 @@
 package ia;
 
+import java.io.DataInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import se.sics.jasper.SPTerm;
 
 public class Main 
 {
@@ -43,19 +42,20 @@ public class Main
 		    srv = new ServerSocket(port) ;
 		    Socket s = srv.accept();
 		    OutputStream os =  s.getOutputStream();	
-		    InputStream is = s.getInputStream();		    
+		    InputStream is = s.getInputStream();
 		    char prevPlat;
 	    	int prevSP, nbSpGagne;
 	    	
 			while(pu.getPartieFinie() == false) {
-				prevPlat =  (char) is.read();
+				prevPlat = (char) is.read();
 		    	prevSP = is.read();
 		    	
 		    	// on recoit le coup fictif [Z,0] si on est le premier coup
 		    	if(prevPlat != 'Z' && prevSP != 0)
+		    	{
 		    		System.out.println("Java -- J'ai recu: " + prevPlat + " " + prevSP);
-				
-				pu.actualiserUPlateau(prevPlat, prevSP, ccA);
+		    		pu.actualiserUPlateau(Tools.charToIntSP(prevPlat), prevSP, ccA);	
+		    	}
 				
 				// Consulter prolog
 				Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
@@ -64,7 +64,7 @@ public class Main
 				nbSpGagne = play.getNbSpGagne();
 				
 				// Actualiser le plateau avec la case de prolog  
-				pu.actualiserUPlateau(play.getNumCase(), play.getSousPlateau(), ccJ);
+	    		pu.actualiserUPlateau(play.getNumCase(), play.getSousPlateau(), ccJ);	
 				
 			    //System.out.println("Java -- Envoie d'une case");
 				os.write(Tools.intToCharSp(play.getSousPlateau()));
