@@ -32,7 +32,7 @@ public class Coup {
 	}
 
 	public String toString() {
-		return "[" + sousPlateau + ',' + numCase + ']';
+		return "[" + sousPlateau + ',' + numCase + "] -" + nbSpGagne;
 	}
 	
 }

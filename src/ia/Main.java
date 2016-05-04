@@ -45,7 +45,7 @@ public class Main
 		    OutputStream os =  s.getOutputStream();	
 		    InputStream is = s.getInputStream();		    
 		    char prevPlat = 'Z';
-	    	int prevSP =0, nbSpGagne=0;
+	    	int prevSP =0;
 	    	
 			while(pu.getPartieFinie() == false) {
 				System.out.println("boucle");
@@ -69,13 +69,10 @@ public class Main
 				pu.actualiserUPlateau(play.getNumCase(), play.getSousPlateau(), ccJ);
 				
 			    //System.out.println("Java -- Envoie d'une case");
-				os.write(Tools.intToCharSp(play.getSousPlateau()));
-				os.flush();
-		    	os.write(play.getNumCase());
-		    	os.flush();
-		    	os.write(play.getNbSpGagne());
-		    	os.flush();
-		    	Thread.sleep(1000);	
+				os.write(play.getNbSpGagne());
+		    	os.write(Tools.intToCharSp(play.getSousPlateau()));
+				os.write(play.getNumCase());
+		    	
 		    	prevPlat ='Z';
 		    	prevSP = 0;
 		    	System.out.println("FINboucle");

@@ -59,8 +59,11 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     int err, spPrec;
     char p, platPrec;
 
-    int32_t sp, nbSpwin;
-
+    int16_t sp, nbSpwin;
+	memset(&platPrec, 0, sizeof(platPrec));
+    memset(&sp, 0, sizeof(sp));
+    memset(&nbSpwin, 0, sizeof(nbSpwin));
+    
     platPrec = getPlatChar(coupPrec.numPlat); 
     printf("C -Envoi\n");
     err = send(sockJava, &platPrec, sizeof(platPrec), 0);
@@ -74,12 +77,19 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     }
 
     printf("C -Reception\n");
+    err = recv(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
+    if (err < 0) {
+       	closeExitSocketClient(sockJava);
+    }
+    printf("C -Nb Sp gagne %d \n", nbSpwin);
+
     err = recv(sockJava, &p, sizeof(p), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
     printf("C -Plateau %c\n", p);
     tc.numPlat = formatPlateau(p);
+    
     err = recv(sockJava, &sp, sizeof(sp), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
@@ -87,11 +97,6 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     printf("C -Sous Plateau %d \n", sp);
     tc.numSousPlat = intToTypSP(sp);
 
-    err = recv(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
-    if (err < 0) {
-       closeExitSocketClient(sockJava);
-    }
-    printf("C -Nb Sp gagne %d \n", nbSpwin);
 
     return tc;
 }
