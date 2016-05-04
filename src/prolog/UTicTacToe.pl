@@ -213,7 +213,7 @@ testSPDispo(Sps,PosSP,1):-
          nth1(PosSP, Sps, S),
          S \= l.
        
-%recoitDemandeCoupJava(Plateau, PlateauSimple,PosSP):-
+
                     
                
        
@@ -304,6 +304,46 @@ value(Sp, S,Cout):-
         Cout is 2 * CoutJ  - CoutA.
 
 testJavaMove(5).
-testJava(PlatU,Sp,Num,S,Move) :-
-        write(PlatU),nl,write(Sp),nl,write(S),nl,write(Num),
-        testJavaMove(Move).
+testJavaCase(6).
+%Si num = 0 -->jouer partout -->1er coup croix
+%PlatU ->plateau complet
+%Sps ->plateau simple
+%num ->num du SP ou joué
+%SpPlay ->num du SP ou prolog à joué
+%CasePlay ->num de la case joué dans le SP
+
+%testJava([[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[l,l,l,l,l,l,l,l,l],1,x,SpPlay,CasePlay,0).
+%testJava([[x,x,x,x,x,x,x,x],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[x,l,x,x,x,x,x,x,x],1,x,SpPlay,CasePlay,0).
+testJava(PlatU,Sps,0,S,SpPlay,CasePlay,_) :-
+        %gestion du parcours des SP libre
+        write(PlatU),nl,write(Sps),nl,write(S),nl,write(0),
+        testJavaMove(SpPlay),testJavaCase(CasePlay).
+
+%le SP donné est libre
+testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,_) :-
+        testSPDispo(Sps,Num,Libre),
+        Libre is 0,
+        SpPlay is Num,
+        nth1(Num, PlatU, Sp),
+        alphaBeta(6,Sp,S, -10000,10000,Move,_,_,CasePlay),
+        write(Move).
+
+%le SP donné est gagné ou nulle -> il faut jouer dans un autre SP (libre)
+testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,_) :-
+        testSPDispo(Sps,Num,Libre),
+        Libre is 1,
+        trouveSPLibre(Sps,SpPlay),
+        nth1(SpPlay, PlatU, Sp),
+        alphaBeta(6,Sp,S, -10000,10000,Move,_,_,CasePlay),
+        write(Move).
+
+%trouveSPLibre([l,x,o,l,l,l,l,l,l],PosSp).
+trouveSPLibre([],1).
+trouveSPLibre([Symbole|_],PosSp):-
+        Symbole = l,
+        trouveSPLibre([],PosSp),!.
+trouveSPLibre([_|R],PosSp1):-
+        trouveSPLibre(R,PosSp),
+        PosSp1 is PosSp+1.
+ 
+                       
