@@ -76,8 +76,8 @@ int main(int argc, char **argv){
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
             //TypCase tc = demandeCaseUser();
-            TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
-            requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
+            requeteCoup = demandeCaseIA(sockJava, coupAdverse.pos,reponsePartie.symb );
+            //requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
             
             //Attente de la validation du coup par le serveur
@@ -104,9 +104,9 @@ int main(int argc, char **argv){
             coupAdverse = recoitEtValidCoup(sock);
            
             //demander case, enregistrer la requete, l'envoyer au serveur
-            TypCase tc = demandeCaseUser();
+            requeteCoup = demandeCaseUser(reponsePartie.symb);
             // TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
-            requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
+            //requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
 
             //Attente de la validation du coup par le serveur

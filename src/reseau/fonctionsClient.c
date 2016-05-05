@@ -21,11 +21,13 @@ char* demandeNom(){
     return nom; 
 }
 
-TypCase demandeCaseUser(){
+TypCoupReq demandeCaseUser(TypSymbol symb){
+    TypCoupReq typC; 
     TypSousPlat tsp;
     TypPlat tp;
     TypCase tc;
     char c;
+    int nbSpwin;
     char* str = (char *)malloc (6*sizeof(char));
     printf("Dans quel plateau voulez-vous jouer ? (A, B, C, D, E, F, G, H, I) \n");
     scanf("%s", &c);
@@ -35,9 +37,15 @@ TypCase demandeCaseUser(){
     scanf("%s", str);
     tsp = formatSousPlateau(str);
     free(str);
+    printf("Nb sous plateau gagné ? \n");
+    scanf("%d", &nbSpwin);
     tc.numPlat = tp;
     tc.numSousPlat = tsp;
-    return tc;
+    typC.idRequest = COUP;
+    typC.symbolJ = symb;                          
+    typC.nbSousPlatG =nbSpwin;
+    typC.pos = tc;
+    return typC;
 }
 
 int connectJava(int s) {
@@ -54,7 +62,8 @@ int connectJava(int s) {
     return sock;
 }
 
-TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
+TypCoupReq demandeCaseIA(int sockJava, TypCase coupPrec,TypSymbol symb){
+    TypCoupReq typC; 
     TypCase tc;
     int err, spPrec,spPrecNet;
     char p, platPrec, spPrecCh;
@@ -95,23 +104,28 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
        closeExitSocketClient(sockJava);
     }
     printf("C -Plateau %c \n", p);
-    err = send(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
+    err = send(sockJava, &p, sizeof(nbSpwin), 0);
     if (err < 0) {
          closeExitSocketClient(sockJava);
     }
-    tc.numPlat = formatPlateau(p);
+   
     err = recv(sockJava, &sp, sizeof(sp), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
     printf("C -Sous Plateau %d   \n", sp);
-    err = send(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
+    err = send(sockJava, &sp, sizeof(nbSpwin), 0);
     if (err < 0) {
              closeExitSocketClient(sockJava);
     }
-    tc.numSousPlat = intToTypSP(sp);
 
-    return tc;
+    tc.numPlat = formatPlateau(p);
+    tc.numSousPlat = intToTypSP(sp);
+    typC.idRequest = COUP;
+    typC.symbolJ = symb;                          
+    typC.nbSousPlatG =nbSpwin;
+    typC.pos = tc;
+    return typC;
 }
                                                                                     
 

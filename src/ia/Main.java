@@ -46,15 +46,12 @@ public class Main
 	    	Socket s = null;
 	    	s = srv.accept();	
 	    	OutputStream os =  s.getOutputStream();
-	    	DataOutputStream dos = new DataOutputStream(os);
 			InputStream is = s.getInputStream();	
 			DataInputStream dis = new DataInputStream(is);
 			System.out.println("Java : début ");
 			while(pu.getPartieFinie() == false) {
 				prevPlat = 0;
-				prevSP = 0;
-				
-				
+				prevSP = 0;	
 				if(is.available() > 0 ){
 					while(prevPlat == 0){
 						prevPlat = (char) is.read();
@@ -63,8 +60,8 @@ public class Main
 						prevSP = dis.readInt();	
 					}
 					
-					System.out.println("Java : J'ai recu " +prevPlat + " et " + prevSP);
-					pu.actualiserUPlateau(prevPlat, prevSP, ccA);
+					System.out.println("Java : J'ai recu " +Tools.charToIntSP(prevPlat) + " et " + prevSP);
+					pu.actualiserUPlateau(Tools.charToIntSP(prevPlat), prevSP, ccA);
 					
 					// Consulter prolog
 					Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
@@ -87,10 +84,7 @@ public class Main
 						System.out.println(e);
 					}
 				}
-				
-				
-				
-				
+		
 			}
 			
 			s.close() ;	    

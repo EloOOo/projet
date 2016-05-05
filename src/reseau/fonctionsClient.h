@@ -13,9 +13,9 @@
 #include "protocoleTicTacToe.h"
 
 char* demandeNom();
-TypCase demandeCaseUser();
+TypCoupReq demandeCaseUser(TypSymbol symb);
 int connectJava(int s);
-TypCase demandeCaseIA(int sockJava, TypCase coupPrec);
+TypCoupReq demandeCaseIA(int sockJava, TypCase coupPrec,TypSymbol symb);
 TypPartieReq remplieRequetePartie(char nom[MAX_CH]);
 TypCoupReq remplieRequeteCoup(TypSymbol  symb,TypCase tc);
 void envoieRequetePartie(TypPartieReq typR, int sock);
