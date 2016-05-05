@@ -1,11 +1,11 @@
 package ia;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import se.sics.jasper.SPTerm;
 
 public class Main 
 {
@@ -36,31 +36,32 @@ public class Main
 			symb ='o';
 		}
 		
-		Case c =  new Case(EPlateau.D,ESousPlateau.HUIT);
-		
 		try 
 		{
 		    srv = new ServerSocket(port) ;
 		   	    
-		    char prevPlat = 'Z';
+		    char prevPlat = 0;
 	    	int prevSP =0;
-	    	int prevPlatInt =0;
 	    	Socket s = null;
 	    	s = srv.accept();	
-	    	OutputStream os =  s.getOutputStream();	
+	    	OutputStream os =  s.getOutputStream();
+	    	DataOutputStream dos = new DataOutputStream(os);
 			InputStream is = s.getInputStream();	
+			DataInputStream dis = new DataInputStream(is);
 			while(pu.getPartieFinie() == false) {
+				prevPlat = 0;
+				prevSP = 0;
 				
-				System.out.println("boucle");
-				System.out.println("bit : "+is.available());
-				while(is.available() >0){
-					prevPlatInt =  is.read();
-					prevSP = is.read();
+				System.out.println("Java : début ");
+				while(prevPlat == 0){
+					prevPlat = (char) is.read();
+				}
+				while(prevSP== 0){
+					prevSP = dis.readInt();	
 				}
 				
-				prevPlat = (char)prevPlatInt;
-				prevPlatInt = Tools.charToIntSP(prevPlat);
-				pu.actualiserUPlateau(prevPlatInt, prevSP, ccA);
+				System.out.println("Java : J'ai recu " +prevPlat + " et " + prevSP);
+				pu.actualiserUPlateau(prevPlat, prevSP, ccA);
 				
 				// Consulter prolog
 				Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
@@ -69,15 +70,12 @@ public class Main
 				// Actualiser le plateau avec la case de prolog  
 				pu.actualiserUPlateau(play.getSousPlateau(),play.getNumCase(), ccJ);
 			
-
-			    //System.out.println("Java -- Envoie d'une case");
 				os.write(play.getNbSpGagne());
-		    	os.write(Tools.intToCharSp(play.getSousPlateau()));
+				os.flush();
+				os.write(Tools.intToCharSp(play.getSousPlateau()));
+				os.flush();
 				os.write(play.getNumCase());
-		    	
-		    	prevPlat ='Z';
-		    	prevSP = 0;
-		    	System.out.println("FINboucle");
+				os.flush();
 			}
 			
 			s.close() ;	    
