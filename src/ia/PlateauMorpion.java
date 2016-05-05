@@ -69,8 +69,8 @@ public class PlateauMorpion {
 		}
 		else if(grille[0][2] == grille[1][1] && grille[1][1] == grille[2][0])
 		{
-			if(grille[0][1] == EContenuCase.croix) estGagne = EEtatGrille.Croix;
-			if(grille[0][1] == EContenuCase.rond) estGagne = EEtatGrille.Rond;
+			if(grille[0][2] == EContenuCase.croix) estGagne = EEtatGrille.Croix;
+			if(grille[0][2] == EContenuCase.rond) estGagne = EEtatGrille.Rond;
 		}	
 	}
 	

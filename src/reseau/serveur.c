@@ -3,14 +3,10 @@
 #include <stdbool.h>
 #include <sys/time.h>
 
-
 #include "protocoleTicTacToe.h"
 #include "common.h"
 #include "fonctionsSocket.h"
 #include "fonctionsServeur.h"
-
-
-
 
 int main(int argc, char** argv) {
     int sockConx, 
@@ -72,9 +68,25 @@ int main(int argc, char** argv) {
            
             if(timeout == 0){
                 //envoie la validation au J1 et J2, la partie continue
-                repCoup.propCoup = CONT;
-                envoieReponseCoup(sockConx,sockTransJ1,repCoup);
-                envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                if(repCoup.propCoup == CONT)
+                {
+                    envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                    envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                } 
+                else if(repCoup.propCoup == PERDU)
+                {
+                    envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                    repCoup.propCoup = GAGNANT;
+                    envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                }
+                else if(repCoup.propCoup == GAGNANT)
+                {
+                    envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                    repCoup.propCoup = PERDU;
+                    envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                }
+
+
                 printf("Coup de J1\n");
                 //afficheCase(coup.pos);
                 nbCoup++;
@@ -106,10 +118,23 @@ int main(int argc, char** argv) {
 
             if(timeout == 0){
                 //envoie la validation au J1 et J2, la partie continue
-                repCoup.propCoup = CONT;
-                envoieReponseCoup(sockConx,sockTransJ2,repCoup);
-                envoieReponseCoup(sockConx,sockTransJ1,repCoup);
-
+                if(repCoup.propCoup == CONT)
+                {
+                    envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                    envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                } 
+                else if(repCoup.propCoup == PERDU)
+                {
+                    envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                    repCoup.propCoup = GAGNANT;
+                    envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                }
+                else if(repCoup.propCoup == GAGNANT)
+                {
+                    envoieReponseCoup(sockConx,sockTransJ2,repCoup);
+                    repCoup.propCoup = PERDU;
+                    envoieReponseCoup(sockConx,sockTransJ1,repCoup);
+                }
                 printf("Coup de J2\n");
                 //afficheCase(coup.pos);
                 nbCoup++;

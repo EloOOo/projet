@@ -30,37 +30,6 @@ winPlateau([[_,_], [_,_],[S,_],[_,_],[_,_],[S,_],[_,_],[_,_],[S,_]]):-!.
 winPlateau([[S,_], [_,_],[_,_],[_,_],[S,_],[_,_],[_,_],[_,_],[S,_]]):-!.
 winPlateau([[_,_], [_,_],[S,_],[_,_],[S,_],[_,_],[S,_],[_,_],[_,_]]):-!.
 
-%Placements possibles d'un symbole dans SP
-moveP([[l,B,C,D,E,F,G,H,I],_], S, J,[[S,B,C,D,E,F,G,H,I],Cout]):-
-        evalSousPlateau([S,B,C,D,E,F,G,H,I],S,J,Cout).
-moveP([[A,l,C,D,E,F,G,H,I],_], S, J,[[A,S,C,D,E,F,G,H,I],Cout]):-
-        evalSousPlateau([A,S,C,D,E,F,G,H,I],S,J,Cout).
-moveP([[A,B,l,D,E,F,G,H,I],_], S, J,[[A,B,S,D,E,F,G,H,I],Cout]):-
-        evalSousPlateau([A,B,S,D,E,F,G,H,I],S,J,Cout).
-moveP([[A,B,C,l,E,F,G,H,I],_], S, J,[[A,B,C,S,E,F,G,H,I],Cout]):-
-        evalSousPlateau([A,B,C,S,E,F,G,H,I],S,J,Cout).
-moveP([[A,B,C,D,l,F,G,H,I],_], S, J,[[A,B,C,D,S,F,G,H,I],Cout]):-
-        evalSousPlateau([A,B,C,D,S,F,G,H,I],S,J,Cout).
-moveP([[A,B,C,D,E,l,G,H,I],_], S, J,[[A,B,C,D,E,S,G,H,I],Cout]):-
-        evalSousPlateau([A,B,C,D,E,S,G,H,I],S,J,Cout).
-moveP([[A,B,C,D,E,F,l,H,I],_], S, J,[[A,B,C,D,E,F,S,H,I],Cout]):-
-        evalSousPlateau([A,B,C,D,E,F,S,H,I],S,J,Cout).
-moveP([[A,B,C,D,E,F,G,l,I],_], S, J,[[A,B,C,D,E,F,G,S,I],Cout]):-
-        evalSousPlateau([A,B,C,D,E,F,G,S,I],S,J,Cout).
-moveP([[A,B,C,D,E,F,G,H,l],_], S, J,[[A,B,C,D,E,F,G,H,S],Cout]):-
-        evalSousPlateau([A,B,C,D,E,F,G,H,S],S,J,Cout).
-
-
-move([l,B,C,D,E,F,G,H,I], S,[S,B,C,D,E,F,G,H,I]).
-move([A,l,C,D,E,F,G,H,I], S,[A,S,C,D,E,F,G,H,I]).
-move([A,B,l,D,E,F,G,H,I], S,[A,B,S,D,E,F,G,H,I]).
-move([A,B,C,l,E,F,G,H,I], S,[A,B,C,S,E,F,G,H,I]).
-move([A,B,C,D,l,F,G,H,I], S,[A,B,C,D,S,F,G,H,I]).
-move([A,B,C,D,E,l,G,H,I], S,[A,B,C,D,E,S,G,H,I]).
-move([A,B,C,D,E,F,l,H,I], S,[A,B,C,D,E,F,S,H,I]).
-move([A,B,C,D,E,F,G,l,I], S,[A,B,C,D,E,F,G,S,I]).
-move([A,B,C,D,E,F,G,H,l], S,[A,B,C,D,E,F,G,H,S]).
-
 movePos([l,B,C,D,E,F,G,H,I], S,[S,B,C,D,E,F,G,H,I],1).
 movePos([A,l,C,D,E,F,G,H,I], S,[A,S,C,D,E,F,G,H,I],2).
 movePos([A,B,l,D,E,F,G,H,I], S,[A,B,S,D,E,F,G,H,I],3).
@@ -140,39 +109,8 @@ etatFinal([[[Sp,Cout]|LSp]|_],S,[[Sp,Cout]|LSp]) :-
 etatFinal([_|LL],S,R) :-
         etatFinal(LL,S,R).
 
-profondeur(SP,S,_,_,_,LR) :-
-         etatFinal(SP,S,LR),!.
-
-profondeur([[SP|P]],S,J,Max,Sol) :-
-        /*Max> 0,*/
-        Max1 is Max- 1,
-        moveP(SP,S,J,R),
-        nonmember(R,P),
-        verifSPGagnantP([[R|[SP|P]]],S,J,Max1,Sol).
-
-parcoursProfondeur(S,L,Max) :-
-        sousPlateau(Sp),
-        evalSousPlateau(Sp,S,0,Cout),
-        profondeur([[[Sp,Cout]]],S,0,Max,Los),
-        inverse(Los,L).
- 
-verifSPGagnantP(LL,S,_,_,LR):-
-         etatFinal(LL,S,LR).
-verifSPGagnantP(LL,S,J,Max,LR):-
-        J1 is 1-J,
-        adversaire(S,A),
-        profondeur(LL,A,J1,Max,LR).  
-
-%tentative a completer
-decrProfondeur(P1,P2) :- P2 is P1-1.
-
-testProfondeur(P,_,_) :- 
-        P == 0 ; 
-        etatFinal(P,_,_).
-
 % alphaBeta(6,[x,l,o,l,l,x,l,o,l],x,-10000,10000,Move,_).
 % alphaBeta(6,[l,l,o,x,l,x,l,o,l],x,-10000,10000,Move,Cout,PosS).
-
 % l'adversaire gagne on s'arrete
 alphaBeta(_,Sp,S,_,_,0,_,-1000,posS):-
         adversaire(S,A),
@@ -181,7 +119,7 @@ alphaBeta(_,Sp,S,_,_,0,_,-1000,posS):-
 alphaBeta(Prof,Sp,S, Alpha,Beta,Move,LMove,Cout,PosS):- 
         Prof > 0,
         bestMoves(Sp,S,LMove,PosS),
-        LMove = [_|_], !, % on v�rifie si la liste contient 1 seul �l�ment ou +
+        LMove = [_|_], !, % on vérifie si la liste contient 1 seul élément ou +
         Prof1 is Prof- 1,
         Alpha1 is -Beta,
         Beta1 is -Alpha,
@@ -203,21 +141,17 @@ alphaBeta(_, Sp, S, _, _, 0,_, Cout,posS):-
 */
 
 %testSPDispo([l,l,l,o,l,o,l,l,l],5,Res).
-%test si le SP ou on doit jou� est d�j� gagn�
+%test si le SP ou on doit joué est déjé gagné
 testSPDispo(Sps,PosSP,0):-
          nth1(PosSP, Sps, S),
          S = l.
           
-% 1 = SP Gagn�         
+% 1 = SP Gagné         
 testSPDispo(Sps,PosSP,1):-
          nth1(PosSP, Sps, S),
          S \= l.
-       
-
-                    
-                               
+        
 meilleurChoix([H|T], Sp, S, Prof, Alpha, Beta, Move0, Move1, Cout1,PosS):-
-        %move(Sp, S, NewSp), !,
         movePos(Sp, S, NewSp,PosS), !,
         adversaire(S,A),
         alphaBeta(Prof, NewSp, A, Alpha, Beta, _,_, CoutMin,posS),
@@ -246,7 +180,7 @@ remplaceOcc([H|T], I, X, [H|R]):-
         remplaceOcc(T, NI, X, R), !.
 remplaceOcc(L, _, _, L).
 
-% D�placement gagnant
+% Déplacement gagnant
 bestMoves(Sp,S,[Move],PosS):-
         %move(Sp,S,Move),
         movePos(Sp,S,Move,PosS),
@@ -273,15 +207,22 @@ value(Sp, S,Cout):-
 %Si num = 0 -->jouer partout -->1er coup croix
 %PlatU ->plateau complet
 %Sps ->plateau simple
-%num ->num du SP ou jou�
-%SpPlay ->num du SP ou prolog � jou�
-%CasePlay ->num de la case jou� dans le SP
+%num ->num du SP ou joué
+%SpPlay ->num du SP ou prolog é joué
+%CasePlay ->num de la case joué dans le SP
 
 %testJava([[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[l,x,l,l,l,l,l,l,l],1,x,SpPlay,CasePlay,L).
 %testJava([[x,x,x,x,x,x,x,x],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[x,l,x,x,x,x,x,x,x],1,x,SpPlay,CasePlay,L).
 
+testEgalite(Sps,S) :-
+        adversaire(S,A),
+        compteSPG(Sps,S,NbSPG1),
+        compteSPG(Sps,A,NbSPG2),
+        Tot is NbSPG1 + NbSPG2,
+        Tot \= 9.
 
 testJava(PlatU,Sps,10,S,SpPlay,CasePlay,NbSPG) :-
+        testEgalite(Sps,S),
         trouveSPLibre(Sps,SpPlay),
         nth1(SpPlay, PlatU, Sp),
         alphaBeta(6,Sp,S, -10000,10000,Move,_,_,CasePlay),
@@ -292,8 +233,9 @@ testJava(PlatU,Sps,10,S,SpPlay,CasePlay,NbSPG) :-
         nth1(SpPlay, PlatU, Sp),
         alphaBeta(6,Sp,S, -10000,10000,_,_,_,CasePlay),
         compteSPG(Sps,S,NbSPG).
-%le SP donn� est libre
+%le SP donné est libre
 testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
+        testEgalite(Sps,S),
         testSPDispo(Sps,Num,Libre),
         Libre is 0,
         SpPlay is Num,
@@ -309,8 +251,9 @@ testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         alphaBeta(6,Sp,S, -10000,10000,_,_,_,CasePlay),
         compteSPG(Sps,S,NbSPG).
 
-%le SP donn� est gagn� ou nulle -> il faut jouer dans un autre SP (libre)
+%le SP donné est gagné ou nulle -> il faut jouer dans un autre SP (libre)
 testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
+        testEgalite(Sps,S),
         testSPDispo(Sps,Num,Libre),
         Libre is 1,
         trouveSPLibre(Sps,SpPlay),
@@ -344,10 +287,3 @@ compteSPG([Symbole|R],S,PosSp1):-
         PosSp1 is PosSp+1.
 compteSPG([_|R],S,PosSp):-
         compteSPG(R,S,PosSp).       
-                    
-/*compte([],0):-!.
-compte([S|X],S,Y):-
-    compte(X,S,D),
-    Y is D+1.
-compte([c|X],S,Y):-
-    compte(X,Y).*/   
