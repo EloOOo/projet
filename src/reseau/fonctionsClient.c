@@ -84,18 +84,31 @@ TypCase demandeCaseIA(int sockJava, TypCase coupPrec){
     if (err < 0) {
        	closeExitSocketClient(sockJava);
     }
-    printf("\nC -Nb Sp gagne %d \n", nbSpwin);
+    printf("\nC -Nb Sp gagne %d\n", nbSpwin);
+
+    err = send(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
+    if (err < 0) {
+         closeExitSocketClient(sockJava);
+    }
     err = recv(sockJava, &p, sizeof(p), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
-    printf("C -Plateau %c\n", p);
+    printf("C -Plateau %c \n", p);
+    err = send(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
+    if (err < 0) {
+         closeExitSocketClient(sockJava);
+    }
     tc.numPlat = formatPlateau(p);
     err = recv(sockJava, &sp, sizeof(sp), 0);
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
-    printf("C -Sous Plateau %d \n", sp);
+    printf("C -Sous Plateau %d   \n", sp);
+    err = send(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
+    if (err < 0) {
+             closeExitSocketClient(sockJava);
+    }
     tc.numSousPlat = intToTypSP(sp);
 
     return tc;

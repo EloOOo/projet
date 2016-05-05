@@ -2,6 +2,7 @@ package ia;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -48,34 +49,48 @@ public class Main
 	    	DataOutputStream dos = new DataOutputStream(os);
 			InputStream is = s.getInputStream();	
 			DataInputStream dis = new DataInputStream(is);
+			System.out.println("Java : début ");
 			while(pu.getPartieFinie() == false) {
 				prevPlat = 0;
 				prevSP = 0;
 				
-				System.out.println("Java : début ");
-				while(prevPlat == 0){
-					prevPlat = (char) is.read();
-				}
-				while(prevSP== 0){
-					prevSP = dis.readInt();	
+				
+				if(is.available() > 0 ){
+					while(prevPlat == 0){
+						prevPlat = (char) is.read();
+					}
+					while(prevSP== 0){
+						prevSP = dis.readInt();	
+					}
+					
+					System.out.println("Java : J'ai recu " +prevPlat + " et " + prevSP);
+					pu.actualiserUPlateau(prevPlat, prevSP, ccA);
+					
+					// Consulter prolog
+					Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
+					//Coup play = JSicstus.findMove("testJava", "[[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]]", "[l,l,l,l,l,l,l,l,l]", 1, 'x');
+					System.out.println("SP :" +play.getSousPlateau() + " case :" + play.getNumCase() + " nb : " +play.getNbSpGagne() );
+					// Actualiser le plateau avec la case de prolog  
+					pu.actualiserUPlateau(play.getSousPlateau(),play.getNumCase(), ccJ);
+					
+					try{
+						os.write(play.getNbSpGagne());
+						os.flush();
+						prevSP = dis.readInt();
+						os.write(Tools.intToCharSp(play.getSousPlateau()));
+						os.flush();
+						prevSP = dis.readInt();
+						os.write(play.getNumCase());
+						os.flush();
+						prevSP = dis.readInt();
+					}catch(IOException e){
+						System.out.println(e);
+					}
 				}
 				
-				System.out.println("Java : J'ai recu " +prevPlat + " et " + prevSP);
-				pu.actualiserUPlateau(prevPlat, prevSP, ccA);
 				
-				// Consulter prolog
-				Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
-				//Coup play = JSicstus.findMove("testJava", "[[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]]", "[l,l,l,l,l,l,l,l,l]", 1, 'x');
-				System.out.println("SP :" +play.getSousPlateau() + "case :" + play.getNumCase() + "nb : " +play.getNbSpGagne() );
-				// Actualiser le plateau avec la case de prolog  
-				pu.actualiserUPlateau(play.getSousPlateau(),play.getNumCase(), ccJ);
-			
-				os.write(play.getNbSpGagne());
-				os.flush();
-				os.write(Tools.intToCharSp(play.getSousPlateau()));
-				os.flush();
-				os.write(play.getNumCase());
-				os.flush();
+				
+				
 			}
 			
 			s.close() ;	    
@@ -84,8 +99,8 @@ public class Main
 		} 
 		catch(Exception e) 	
 		{
-			//System.err.println("Exception Serveur Java : " + e);
-			//e.printStackTrace();
+			System.err.println("Exception Serveur Java : " + e);
+			e.printStackTrace();
 		}
 	}
 }
