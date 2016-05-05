@@ -41,33 +41,35 @@ public class Main
 		try 
 		{
 		    srv = new ServerSocket(port) ;
-		    Socket s = srv.accept();
-		    OutputStream os =  s.getOutputStream();	
-		    InputStream is = s.getInputStream();		    
+		   	    
 		    char prevPlat = 'Z';
 	    	int prevSP =0;
-	    	
+	    	int prevPlatInt =0;
+	    	Socket s = null;
+	    	s = srv.accept();	
+	    	OutputStream os =  s.getOutputStream();	
+			InputStream is = s.getInputStream();	
 			while(pu.getPartieFinie() == false) {
+				
 				System.out.println("boucle");
-				while(prevSP == 0){
-					prevPlat =  (char) is.read();
-			    	prevSP = is.read();
-			    	
+				System.out.println("bit : "+is.available());
+				while(is.available() >0){
+					prevPlatInt =  is.read();
+					prevSP = is.read();
 				}
-				System.out.println("prevPlat  "+ prevPlat+ "et " +prevSP);
-		    	
-		    	// on recoit le coup fictif [Z,0] si on est le premier coup
-		    				
-				pu.actualiserUPlateau(prevPlat, prevSP, ccA);
+				
+				prevPlat = (char)prevPlatInt;
+				prevPlatInt = Tools.charToIntSP(prevPlat);
+				pu.actualiserUPlateau(prevPlatInt, prevSP, ccA);
 				
 				// Consulter prolog
 				Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
 				//Coup play = JSicstus.findMove("testJava", "[[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]]", "[l,l,l,l,l,l,l,l,l]", 1, 'x');
-				System.out.println(play);
-				
+				System.out.println("SP :" +play.getSousPlateau() + "case :" + play.getNumCase() + "nb : " +play.getNbSpGagne() );
 				// Actualiser le plateau avec la case de prolog  
-				pu.actualiserUPlateau(play.getNumCase(), play.getSousPlateau(), ccJ);
-				
+				pu.actualiserUPlateau(play.getSousPlateau(),play.getNumCase(), ccJ);
+			
+
 			    //System.out.println("Java -- Envoie d'une case");
 				os.write(play.getNbSpGagne());
 		    	os.write(Tools.intToCharSp(play.getSousPlateau()));

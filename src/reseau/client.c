@@ -75,7 +75,8 @@ int main(int argc, char **argv){
         if (reponsePartie.symb == CROIX)  
         {
             //demander case, enregistrer la requete, l'envoyer au serveur
-            // TypCase tc = demandeCaseUser();
+            //TypCase tc = demandeCaseUser();
+            printf("va appeler demande case Ia avec %d \n",coupAdverse.pos.numSousPlat);
             TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
             requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
@@ -95,6 +96,8 @@ int main(int argc, char **argv){
 
             //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
+            printf("va appeler demande case Ia avec %d \n",coupAdverse.pos.numSousPlat);
+
         }
 
         // 2eme joueur

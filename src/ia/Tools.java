@@ -54,9 +54,9 @@ public class Tools {
 		case 'I' :
 			i = 9; break;
 		default :
-			ch = 0; break;
+			i = 0; break;
 		}	
 		
-		return 0;
+		return i;
 	}
 }

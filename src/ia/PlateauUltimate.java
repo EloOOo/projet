@@ -48,8 +48,8 @@ public class PlateauUltimate {
 		int c =0;
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
-				if (c == numPlateau)	
-					plateau[i][j].actualiserPlateau(numCase, s);
+				if (c == numPlateau-1)	
+					plateau[i][j].actualiserPlateau(numCase-1, s);
 				
 				c++;
 			}
