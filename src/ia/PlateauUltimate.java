@@ -46,6 +46,7 @@ public class PlateauUltimate {
 
 	public void actualiserUPlateau(int numPlateau, int numCase, EContenuCase s) {
 		int c =0;
+		System.out.println("modif Plateau " + numPlateau);
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
 				if (c == numPlateau-1)	

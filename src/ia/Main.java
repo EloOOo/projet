@@ -1,12 +1,13 @@
 package ia;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import se.sics.jasper.SICStus;
 
 public class Main 
 {
@@ -39,6 +40,7 @@ public class Main
 		
 		try 
 		{
+			SICStus sics =new SICStus();
 		    srv = new ServerSocket(port) ;
 		   	    
 		    char prevPlat = 0;
@@ -64,7 +66,7 @@ public class Main
 					pu.actualiserUPlateau(Tools.charToIntSP(prevPlat), prevSP, ccA);
 					
 					// Consulter prolog
-					Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb);
+					Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb,sics);
 					//Coup play = JSicstus.findMove("testJava", "[[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]]", "[l,l,l,l,l,l,l,l,l]", 1, 'x');
 					System.out.println("SP :" +play.getSousPlateau() + " case :" + play.getNumCase() + " nb : " +play.getNbSpGagne() );
 					// Actualiser le plateau avec la case de prolog  

@@ -77,6 +77,7 @@ public class PlateauMorpion {
 	
 	public void actualiserPlateau(int numCase, EContenuCase s) {
 		int c = 0;
+		System.out.println("modif Case " + numCase);
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
 				if(c== numCase) 

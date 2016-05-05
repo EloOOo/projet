@@ -6,20 +6,16 @@ import se.sics.jasper.SICStus;
 import se.sics.jasper.SPTerm;
 
 public class JSicstus {
-	public static SICStus sp = null;
-	public static Coup findMove(String cmd, String plateau, String SpSimple, int numSp,char symbole) {
-		
-		HashMap varMap = new HashMap();
 	
+	public static Coup findMove(String cmd, String plateau, String SpSimple, int numSp,char symbole,SICStus sp) {
+		HashMap varMap = new HashMap();
 		Coup c = null;
 		try {
-			System.out.println("LALAL");
-			sp = new SICStus();
-			System.out.println("LALAL");
 			// Chargement d'un fichier prolog .pl
 			sp.load("../prolog/UTicTacToe.pl");
 			String str = cmd + "(" + plateau+ "," + SpSimple + "," + numSp +"," + symbole + ",SousPlateau,Case,NbSpWin)."; 
 			System.out.println(str);
+			
 			if(sp.query(str, varMap)) 
 			{
 				int sousPlat = Integer.parseInt(((SPTerm)varMap.get("SousPlateau")).toString());

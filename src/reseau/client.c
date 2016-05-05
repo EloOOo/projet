@@ -55,18 +55,16 @@ int main(int argc, char **argv){
     afficheInfoPartie(reponsePartie);
    	
     // Lance le serveur Java automatiquement  + se connceter via la sokcet sockJava
-    if(reponsePartie.symb == CROIX) { // pour les tests A ENLEVER par la suite
-	    int* arg = malloc(sizeof(*arg));
-	    if ( arg == NULL ) {
-	        fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
-	        exit(EXIT_FAILURE);
-	    }
-	    *arg = symbole;
-		pthread_create(&thrJava, NULL, (void *)startServeurJava, arg);
-		sleep(1);
-		
-		sockJava = connectJava(symbole);
+    int* arg = malloc(sizeof(*arg));
+    if ( arg == NULL ) {
+        fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
+        exit(EXIT_FAILURE);
     }
+    *arg = symbole;
+	pthread_create(&thrJava, NULL, (void *)startServeurJava, arg);
+	sleep(1);
+	
+	sockJava = connectJava(symbole);
 
  	while (partieFinie == 0) 
     {
@@ -104,8 +102,8 @@ int main(int argc, char **argv){
             coupAdverse = recoitEtValidCoup(sock);
            
             //demander case, enregistrer la requete, l'envoyer au serveur
-            requeteCoup = demandeCaseUser(reponsePartie.symb);
-            // TypCase tc = demandeCaseIA(sockJava, coupAdverse.pos);
+            //requeteCoup = demandeCaseUser(reponsePartie.symb);
+            requeteCoup = demandeCaseIA(sockJava, coupAdverse.pos,reponsePartie.symb);
             //requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
             envoieRequeteCoupClient(requeteCoup,sock);
 

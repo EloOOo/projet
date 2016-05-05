@@ -215,40 +215,7 @@ testSPDispo(Sps,PosSP,1):-
        
 
                     
-               
-       
-       
-       
-        
-        
-
-testCoup(Plateau,PlateauSimple,Prof,Sp,S, Alpha,Beta,Move,LMove,Cout,PosS,0):-
-        alphaBeta(Prof,Sp,S, Alpha,Beta,Move,LMove,Cout,PosS),
-        %recup P , puis le SP posS
-        plateau(Plateau),
-        plateauSimple(PlateauSimple),
-        recupSPdansP(PosS,Plateau,SpAdv),
-        adversaire(S,A),
-        alphaBeta(Prof,SpAdv,A, Alpha,Beta,Move2,_,_,_),
-        %move2 gagnant mettre � jour le PlateauSimple, tester si c'est gagnant pour adv
-        winSousPlateau(Move2,A),
-        movePos(PlateauSimple, A,NPS,PosS),
-        write(NPS),
-        winSousPlateau(NPS,A),
-        testCoup(Plateau,PlateauSimple,Prof,Sp,S, Alpha,Beta,Move,LMove,Cout,PosS,1).
-        
-recupSPdansP(PosS,P,SP):-
-        nth1(PosS, P, SP).   
-   
-/*majPlateauSimple(_,0,S,Acc,NP).         
-majPlateauSimple([H|Rs],PosS,S,Acc,NP):-
-        Pos1 is PosS-1,
-        majPlateauSimple(Rs,Pos1,S,[H|Acc],NP).*/
-        
-        
-        
-
-                
+                               
 meilleurChoix([H|T], Sp, S, Prof, Alpha, Beta, Move0, Move1, Cout1,PosS):-
         %move(Sp, S, NewSp), !,
         movePos(Sp, S, NewSp,PosS), !,
