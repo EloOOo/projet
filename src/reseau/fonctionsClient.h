@@ -13,6 +13,7 @@
 #include "protocoleTicTacToe.h"
 
 struct arg_struct {
+	char* path;
     int symb;
     int portJava;
 };

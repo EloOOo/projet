@@ -61,6 +61,7 @@ int main(int argc, char **argv){
    	
     // Lance le serveur Java automatiquement  + se connceter via la sokcet sockJava
     struct arg_struct args;
+    args.path = path;
     args.symb = symbole;
     args.portJava = atoi(argv[4]);
 	pthread_create(&thrJava, NULL, (void *)startServeurJava, (void *)&args);
