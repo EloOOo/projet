@@ -140,16 +140,16 @@ meilleurChoix([H|T], Sp, S, Prof, Alpha, Beta, Move0, Move1, Cout1):-
         adversaire(S,A),
         alphaBeta(Prof, NewSp, A, Alpha, Beta, _,_, CoutMin),
         Cout is -CoutMin,
-        cutoff(H, Cout, Prof, Alpha, Beta, T, Sp, S, Move0, Move1, Cout1).
+        coupe(H, Cout, Prof, Alpha, Beta, T, Sp, S, Move0, Move1, Cout1).
 meilleurChoix([], _, _, _, Alpha, _, Move, Move, Alpha).
 
-cutoff(_, Cout, Prof, Alpha, Beta, LstMove, Sp, S, Move0, Move1, Value1):-
+coupe(_, Cout, Prof, Alpha, Beta, LstMove, Sp, S, Move0, Move1, Value1):-
         Cout =< Alpha, !,
         meilleurChoix(LstMove, Sp, S, Prof, Alpha, Beta, Move0, Move1, Value1).
-cutoff(Move, Cout, Prof, _, Beta, LstMove, Sp, S, _, Move1, Value1):-
+coupe(Move, Cout, Prof, _, Beta, LstMove, Sp, S, _, Move1, Value1):-
         Cout < Beta, !,
         meilleurChoix(LstMove, Sp, S, Prof, Cout, Beta, Move, Move1, Value1).
-cutoff(Move, Cout, _, _, _, _, _, _, _, Move, Cout).
+coupe(Move, Cout, _, _, _, _, _, _, _, Move, Cout).
 
 premiereDiff(L, L, 0).
 premiereDiff([_|T], [_|T], 1):- !.
@@ -195,8 +195,8 @@ value(Sp, S,Cout):-
 %SpPlay ->num du SP ou prolog é joué
 %CasePlay ->num de la case joué dans le SP
 
-%testJava([[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[l,x,l,l,l,l,l,l,l],1,x,SpPlay,CasePlay,L).
-%testJava([[x,x,x,x,x,x,x,x],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[x,l,x,x,x,x,x,x,x],1,x,SpPlay,CasePlay,L).
+%genereCoup([[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[l,x,l,l,l,l,l,l,l],1,x,SpPlay,CasePlay,L).
+%genereCoup([[x,x,x,x,x,x,x,x],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]],[x,l,x,x,x,x,x,x,x],1,x,SpPlay,CasePlay,L).
 
 testEgalite(Sps,S) :-
         adversaire(S,A),
@@ -205,7 +205,7 @@ testEgalite(Sps,S) :-
         Tot is NbSPG1 + NbSPG2,
         Tot \= 9.
 
-testJava(PlatU,Sps,10,S,SpPlay,CasePlay,NbSPG) :-
+genereCoup(PlatU,Sps,10,S,SpPlay,CasePlay,NbSPG) :-
         testEgalite(Sps,S),
         trouveSPLibre(Sps,SpPlay),
         nth1(SpPlay, PlatU, Sp),
@@ -215,7 +215,7 @@ testJava(PlatU,Sps,10,S,SpPlay,CasePlay,NbSPG) :-
         majSps(Sps,S,R,SpPlay,Nps),
         compteSPG(Nps,S,NbSPG).
 %le SP donné est libre
-testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
+genereCoup(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         testEgalite(Sps,S),
         testSPDispo(Sps,Num,Libre),
         Libre is 0,
@@ -228,7 +228,7 @@ testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         compteSPG(Nps,S,NbSPG).
 
 %le SP donné est gagné ou nulle -> il faut jouer dans un autre SP (libre)
-testJava(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
+genereCoup(PlatU,Sps,Num,S,SpPlay,CasePlay,NbSPG) :-
         testEgalite(Sps,S),
         testSPDispo(Sps,Num,Libre),
         Libre is 1,

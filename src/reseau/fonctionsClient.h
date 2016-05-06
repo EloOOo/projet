@@ -16,6 +16,7 @@ struct arg_struct {
 	char* path;
     int symb;
     int portJava;
+    int cond;
 };
 
 char* demandeNom();

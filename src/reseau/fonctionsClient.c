@@ -261,9 +261,18 @@ void *startServeurJava(void *arg)
 {
     char String[255];
     struct arg_struct *args = arg;
-    sprintf(String, "java -classpath \"%s/sicstus-4.3.2/bin/jasper.jar:../../bin/\" ia.Main %d %d",
-    		args->path, args->portJava, args->symb-1);
-    system(String);
+    if (args->cond == 0) 
+    {
+	    sprintf(String, "java -classpath \"%s/sicstus-4.3.2/bin/jasper.jar:../../bin/\" ia.Main %d %d 0",
+	    		args->path, args->portJava, args->symb-1);
+	    system(String);
+    }
+    else
+    {
+	    sprintf(String, "java -classpath \"%s/sicstus-4.3.2/bin/jasper.jar:bin/\" ia.Main %d %d 1",
+	    		args->path, args->portJava, args->symb-1);
+	    system(String);	
+    }
     free(arg);
     pthread_exit(NULL);
 }

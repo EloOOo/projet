@@ -27,7 +27,7 @@ fonctionsServeur.o: fonctionsServeur.c
 client: client.c common.o fonctionsSocket.o fonctionsClient.o
 	gcc client.c -o client common.o fonctionsSocket.o fonctionsClient.o $(LD_FLAGS) -lpthread 
 
-serveur: serveur.c common.o fonctionsSocket.o fonctionsServeur.o tictactoe.o
+serveur: serveur.c common.o fonctionsSocket.o fonctionsServeur.o 
 	gcc serveur.c -o serveur common.o fonctionsSocket.o fonctionsServeur.o tictactoe.o $(LD_FLAGS)
 
 clean:

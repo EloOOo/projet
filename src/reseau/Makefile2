@@ -1,0 +1,35 @@
+#########
+#
+# fonctionsTCP
+#
+#########
+
+# For Solaris
+#LD_FLAGS = -lsocket -lnsl
+
+# For Linux
+LD_FLAGS = -std=c99 -Wall -Wextra
+
+all: src/reseau/client src/reseau/serveur 
+
+src/reseau/fonctionsSocket.o: src/reseau/fonctionsSocket.c
+	gcc -c -o src/reseau/fonctionsSocket.o src/reseau/fonctionsSocket.c
+
+src/reseau/common.o: src/reseau/common.c
+	gcc -c -o src/reseau/common.o src/reseau/common.c
+
+src/reseau/fonctionsClient.o: src/reseau/fonctionsClient.c
+	gcc -c -o src/reseau/fonctionsClient.o src/reseau/fonctionsClient.c -lpthread 
+
+src/reseau/fonctionsServeur.o: src/reseau/fonctionsServeur.c
+	gcc -c -o src/reseau/fonctionsServeur.o src/reseau/fonctionsServeur.c
+
+src/reseau/client: src/reseau/client.c src/reseau/common.o src/reseau/fonctionsSocket.o src/reseau/fonctionsClient.o
+	gcc src/reseau/client.c -o src/reseau/client src/reseau/common.o src/reseau/fonctionsSocket.o src/reseau/fonctionsClient.o $(LD_FLAGS) -lpthread 
+
+src/reseau/serveur: src/reseau/serveur.c src/reseau/common.o src/reseau/fonctionsSocket.o src/reseau/fonctionsServeur.o 
+	gcc src/reseau/serveur.c -o src/reseau/serveur src/reseau/common.o src/reseau/fonctionsSocket.o src/reseau/fonctionsServeur.o tictactoe.o $(LD_FLAGS)
+
+clean:
+	rm *~ ; rm -i \#* ; rm *.o; \
+        rm src/reseau/client ; rm src/reseau/serveur ; 

@@ -21,8 +21,8 @@ int main(int argc, char **argv){
     char exportPath[255], compileJava[255];
     pthread_t thrJava;
 
-    if (argc != 6) {
-        printf("usage : client nom_machine no_port nom_joueur port_java path_prolog\n");
+    if (argc != 7) {
+        printf("usage : client nom_machine no_port nom_joueur port_java path_prolog cond\n");
         exit(1);
     }
 
@@ -30,11 +30,19 @@ int main(int argc, char **argv){
     int nbPort = atoi(argv[2]);
     nomJ = argv[3];
     path = argv[5];
-	
-    sprintf(exportPath, "export LD_LIBRARY_PATH=%s", path);
-	system(exportPath);
-    sprintf(compileJava, "javac -classpath \"%s/sicstus-4.3.2/bin/jasper.jar\" -d \"../../bin/\" ../ia/*.java", path);
-	system(compileJava);
+	int cond = atoi(argv[6]);
+
+    if (cond == 0) {
+	    sprintf(exportPath, "export LD_LIBRARY_PATH=%s", path);
+		system(exportPath);
+	    sprintf(compileJava, "javac -classpath \"%s/sicstus-4.3.2/bin/jasper.jar\" -d \"../../bin/\" ../ia/*.java", path);
+		system(compileJava);
+    } else {
+		sprintf(exportPath, "export LD_LIBRARY_PATH=%s", path);
+		system(exportPath);
+	    sprintf(compileJava, "javac -classpath \"%s/sicstus-4.3.2/bin/jasper.jar\" -d \"bin/\" src/ia/*.java", path);
+		system(compileJava);
+    }
     
     //Creation de la socket client
     sock =  socketClient(nomMachine, nbPort);
@@ -61,6 +69,7 @@ int main(int argc, char **argv){
    	
     // Lance le serveur Java automatiquement  + se connceter via la sokcet sockJava
     struct arg_struct args;
+    args.cond = cond;
     args.path = path;
     args.symb = symbole;
     args.portJava = atoi(argv[4]);

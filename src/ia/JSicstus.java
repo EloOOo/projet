@@ -12,9 +12,8 @@ public class JSicstus {
 		Coup c = null;
 		try {
 			// Chargement d'un fichier prolog .pl
-			sp.load("../prolog/UTicTacToe.pl");
 			String str = cmd + "(" + plateau+ "," + SpSimple + "," + numSp +"," + symbole + ",SousPlateau,Case,NbSpWin)."; 
-			System.out.println(str);
+			//System.out.println(str);
 			
 			if(sp.query(str, varMap)) 
 			{

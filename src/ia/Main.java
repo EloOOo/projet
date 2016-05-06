@@ -15,14 +15,15 @@ public class Main
 	{
 		PlateauUltimate pu = new PlateauUltimate();
 		
-		if (args.length!=2){
-		    System.out.println("Java -- argument - port - symbole");
+		if (args.length!=3){
+		    System.out.println("Java -- argument - port - symbole - cond");
 		    System.exit(1);
 		}
 		
 		ServerSocket srv = null;
 		Socket s =null;
 		int port = Integer.parseInt(args[0]);
+		int cond = Integer.parseInt(args[2]);
 		int symbole = Integer.parseInt(args[1]); // 0 ->croix 1-> rond
 		EContenuCase ccJ , ccA;
 		char symb;
@@ -49,6 +50,10 @@ public class Main
 	    	OutputStream os =  s.getOutputStream();
 			InputStream is = s.getInputStream();	
 			DataInputStream dis = new DataInputStream(is);
+			if(cond == 0)
+				sics.load("../prolog/UTicTacToe.pl");
+			else 
+				sics.load("src/prolog/UTicTacToe.pl");
 			
 			while(pu.getPartieFinie() == false) {
 				prevPlat = 0;
@@ -61,13 +66,13 @@ public class Main
 						prevSP = dis.readInt();	
 					}
 					
-					System.out.println("Java : J'ai recu " +Tools.charToIntSP(prevPlat) + " et " + prevSP);
+					//System.out.println("Java : J'ai recu " +Tools.charToIntSP(prevPlat) + " et " + prevSP);
 					pu.actualiserUPlateau(Tools.charToIntSP(prevPlat), prevSP, ccA);
 
 					// Consulter prolog
-					Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb,sics);
+					Coup play = JSicstus.findMove("genereCoup", pu.toString(), pu.getSpSimple(), prevSP, symb,sics);
 					//Coup play = JSicstus.findMove("testJava", "[[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]]", "[l,l,l,l,l,l,l,l,l]", 1, 'x');
-					System.out.println("SP :" +play.getSousPlateau() + " case :" + play.getNumCase() + " nb : " +play.getNbSpGagne() );
+					//System.out.println("SP :" +play.getSousPlateau() + " case :" + play.getNumCase() + " nb : " +play.getNbSpGagne() );
 					// Actualiser le plateau avec la case de prolog  
 					pu.actualiserUPlateau(play.getSousPlateau(),play.getNumCase(), ccJ);
 					
