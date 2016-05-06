@@ -10,6 +10,7 @@
 #include "protocoleTicTacToe.h"
 #include "validation.h"
 
+#define TIME_MAX 6
 
 int attendRequeteClient(int sockConx);
 TypPartieReq recoitRequetePartieClient(int sockConx,int sockTrans);

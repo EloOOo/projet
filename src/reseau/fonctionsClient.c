@@ -82,16 +82,11 @@ TypCoupReq demandeCaseIA(int sockJava, TypCase coupPrec,TypSymbol symb){
     if (err < 0) {
         closeExitSocketClient(sockJava);
     }
-    printf("\nC -Envoi : platPrec %c et spPrec %d \n",platPrec,spPrec);
-
-    printf("C -Reception\n");
-
     
     err = recv(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
     if (err < 0) {
        	closeExitSocketClient(sockJava);
     }
-    printf("\nC -Nb Sp gagne %d\n", nbSpwin);
 
     err = send(sockJava, &nbSpwin, sizeof(nbSpwin), 0);
     if (err < 0) {
@@ -101,7 +96,6 @@ TypCoupReq demandeCaseIA(int sockJava, TypCase coupPrec,TypSymbol symb){
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
-    printf("C -Plateau %c \n", p);
     err = send(sockJava, &p, sizeof(nbSpwin), 0);
     if (err < 0) {
          closeExitSocketClient(sockJava);
@@ -111,7 +105,6 @@ TypCoupReq demandeCaseIA(int sockJava, TypCase coupPrec,TypSymbol symb){
     if (err < 0) {
        closeExitSocketClient(sockJava);
     }
-    printf("C -Sous Plateau %d   \n", sp);
     err = send(sockJava, &sp, sizeof(nbSpwin), 0);
     if (err < 0) {
              closeExitSocketClient(sockJava);
@@ -259,7 +252,7 @@ void traiteReponseCoup(int sock,TypCoupRep typCoupRep){
     if(typCoupRep.validCoup == TIMEOUT || typCoupRep.validCoup == TRICHE){
         closeExitSocketClient(sock);
     }
-    if(typCoupRep.propCoup != CONT){
+    if(typCoupRep.propCoup != CONT && typCoupRep.propCoup != PERDU){
         closeExitSocketClient(sock);
     }
 }  

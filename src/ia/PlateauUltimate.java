@@ -46,7 +46,6 @@ public class PlateauUltimate {
 
 	public void actualiserUPlateau(int numPlateau, int numCase, EContenuCase s) {
 		int c =0;
-		System.out.println("modif Plateau " + numPlateau);
 		for (int i=0; i<3;i++){
 			for (int j=0; j<3;j++){
 				if (c == numPlateau-1)	
@@ -55,6 +54,38 @@ public class PlateauUltimate {
 				c++;
 			}
 		}
+	}
+	
+	public boolean isFinish() {
+		EContenuCase[][] grille = new EContenuCase[3][3];
+		
+		for (int i=0; i<3;i++){
+			for (int j=0; j<3;j++){
+				if(plateau[i][j].getEstGagne() == EEtatGrille.Croix) 
+					 grille[i][j] = EContenuCase.croix;
+				else if(plateau[i][j].getEstGagne() == EEtatGrille.Rond) 
+					 grille[i][j] = EContenuCase.rond;
+				else 
+					grille[i][j] = EContenuCase.libre;
+			}
+		}
+		if(grille[0][0] == grille[0][1] && grille[0][1] == grille[0][2] && (grille[0][0] == EContenuCase.croix || grille[0][0] == EContenuCase.rond))
+			return true;
+		else if(grille[1][0] == grille[1][1] && grille[1][1] == grille[1][2] && (grille[1][0] == EContenuCase.croix || grille[1][0] == EContenuCase.rond))
+			return true;
+		else if(grille[2][0] == grille[2][1] && grille[2][1] == grille[2][2] && (grille[2][0] == EContenuCase.croix || grille[2][0] == EContenuCase.rond))
+			return true;
+		else if(grille[0][0] == grille[1][0] && grille[1][0] == grille[2][0] && (grille[0][0] == EContenuCase.croix || grille[0][0] == EContenuCase.rond))
+			return true;
+		else if(grille[0][1] == grille[1][1] && grille[1][1] == grille[2][1] && (grille[0][1] == EContenuCase.croix || grille[0][1] == EContenuCase.rond))
+			return true;
+		else if(grille[0][2] == grille[1][2] && grille[1][2] == grille[2][2] && (grille[0][2] == EContenuCase.croix || grille[0][2] == EContenuCase.rond))
+			return true;
+		else if(grille[0][0] == grille[1][1] && grille[1][1] == grille[2][2] && (grille[0][0] == EContenuCase.croix || grille[0][0] == EContenuCase.rond))
+			return true;
+		else if(grille[0][2] == grille[1][1] && grille[1][1] == grille[2][0] && (grille[0][2] == EContenuCase.croix || grille[0][2] == EContenuCase.rond))
+			return true;
+		return false;	
 	}
 	
 	// représentation du plateau ultimate sous forme d'un sous plateau simple

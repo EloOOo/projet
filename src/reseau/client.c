@@ -11,27 +11,31 @@
 
  
 int main(int argc, char **argv){
-    // system("export LD_LIBRARY_PATH=../../include/sicstus/lib/");
-    // system("javac -classpath \"../../include/sicstus/lib/sicstus/bin/jasper.jar\"  -d \"../../bin/\" ../ia/*.java");
-    system("export LD_LIBRARY_PATH=/usr/local/sicstus4.3.2/lib/");
-    system("javac -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
     int sock, sockJava, symbole ,partieFinie = 0;             
     TypPartieReq requetePartie;
     TypPartieRep reponsePartie;
     TypCoupReq requeteCoup, coupAdverse;
     TypCoupRep reponseCoup;
     char* nomJ;
+    char* path;
+    char exportPath[255], compileJava[255];
     pthread_t thrJava;
 
-    if (argc != 5) {
-        printf("usage : client nom_machine no_port nom_joueur port_Java\n");
+    if (argc != 6) {
+        printf("usage : client nom_machine no_port nom_joueur port_java path_prolog\n");
         exit(1);
     }
 
     char* nomMachine = argv[1];
     int nbPort = atoi(argv[2]);
     nomJ = argv[3];
-
+    path = argv[5];
+	
+    sprintf(exportPath, "export LD_LIBRARY_PATH=%s", path);
+	system(exportPath);
+    sprintf(compileJava, "javac -classpath \"%s/sicstus-4.3.2/bin/jasper.jar\" -d \"../../bin/\" ../ia/*.java", path);
+	system(compileJava);
+    
     //Creation de la socket client
     sock =  socketClient(nomMachine, nbPort);
     if (sock < 0) { 
@@ -80,17 +84,21 @@ int main(int argc, char **argv){
             reponseCoup = recoitValidationCoup(sock);
 
             //Affiche si le coup est valide et l'état de la partie 
-            afficheReponseCoup(sock,reponseCoup);
+            //afficheReponseCoup(sock,reponseCoup);
             
             //continue ou arrete la partie en fonction de la validation
-            traiteReponseCoup(sock,reponseCoup);
+		    traiteReponseCoup(sock,reponseCoup);
+
 
             // Affichage de la case envoyée
             printf("Coup joué  \n");
             afficheCase(requeteCoup.pos);
-
             //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
+	        if(reponseCoup.propCoup == PERDU){
+	            requeteCoup = demandeCaseIA(sockJava, coupAdverse.pos,reponsePartie.symb);
+        		closeExitSocketClient(sock);
+			}
         }
 
         // 2eme joueur
@@ -98,7 +106,10 @@ int main(int argc, char **argv){
         {  
             //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
-           
+         	if(reponseCoup.propCoup == PERDU){
+	            requeteCoup = demandeCaseIA(sockJava, coupAdverse.pos,reponsePartie.symb);
+        		closeExitSocketClient(sock);
+			}  
             //demander case, enregistrer la requete, l'envoyer au serveur
             //requeteCoup = demandeCaseUser(reponsePartie.symb);
             requeteCoup = demandeCaseIA(sockJava, coupAdverse.pos,reponsePartie.symb);
@@ -107,12 +118,12 @@ int main(int argc, char **argv){
 
             //Attente de la validation du coup par le serveur
             reponseCoup = recoitValidationCoup(sock);
-
+	      
             //Affiche si le coup est valide et l'état de la partie
-            afficheReponseCoup(sock,reponseCoup);
+            //afficheReponseCoup(sock,reponseCoup);
             //continue ou arrete la partie en fonction de la validation
             traiteReponseCoup(sock,reponseCoup);
-
+            
             // Affichage de la case envoyée
             printf("Coup joué \n");
             afficheCase(requeteCoup.pos);

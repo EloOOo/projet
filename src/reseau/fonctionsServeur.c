@@ -38,7 +38,7 @@ TypPartieReq recoitRequetePartieClient(int sockConx,int sockTrans){
 //timeout sert à gerer si le temps est dépassé pour le coup
 TypCoupReq recoitRequeteCoup(int sockConx,int sockTrans, int *timeout){
     struct timeval tv;
-    tv.tv_sec = 30;
+    tv.tv_sec = TIME_MAX;
     tv.tv_usec = 0;  
     setsockopt(sockTrans, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
     
