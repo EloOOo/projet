@@ -64,31 +64,27 @@ public class Main
 					System.out.println("Java : J'ai recu " +Tools.charToIntSP(prevPlat) + " et " + prevSP);
 					pu.actualiserUPlateau(Tools.charToIntSP(prevPlat), prevSP, ccA);
 
-					pu.setPartieFinie(pu.isFinish());
-					if (!pu.getPartieFinie()) 
-					{
-						// Consulter prolog
-						Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb,sics);
-						//Coup play = JSicstus.findMove("testJava", "[[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]]", "[l,l,l,l,l,l,l,l,l]", 1, 'x');
-						System.out.println("SP :" +play.getSousPlateau() + " case :" + play.getNumCase() + " nb : " +play.getNbSpGagne() );
-						// Actualiser le plateau avec la case de prolog  
-						pu.actualiserUPlateau(play.getSousPlateau(),play.getNumCase(), ccJ);
-						
-						try{
-							os.write(play.getNbSpGagne());
-							os.flush();
-							prevSP = dis.readInt();
-							os.write(Tools.intToCharSp(play.getSousPlateau()));
-							os.flush();
-							prevSP = dis.readInt();
-							os.write(play.getNumCase());
-							os.flush();
-							prevSP = dis.readInt();
-						}catch(IOException e){
-							System.out.println(e);
-						}
-						pu.setPartieFinie(pu.isFinish());	
+					// Consulter prolog
+					Coup play = JSicstus.findMove("testJava", pu.toString(), pu.getSpSimple(), prevSP, symb,sics);
+					//Coup play = JSicstus.findMove("testJava", "[[l,l,l,x,l,x,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,o,l,o,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l],[l,l,l,l,l,l,l,l,l]]", "[l,l,l,l,l,l,l,l,l]", 1, 'x');
+					System.out.println("SP :" +play.getSousPlateau() + " case :" + play.getNumCase() + " nb : " +play.getNbSpGagne() );
+					// Actualiser le plateau avec la case de prolog  
+					pu.actualiserUPlateau(play.getSousPlateau(),play.getNumCase(), ccJ);
+					
+					try{
+						os.write(play.getNbSpGagne());
+						os.flush();
+						prevSP = dis.readInt();
+						os.write(Tools.intToCharSp(play.getSousPlateau()));
+						os.flush();
+						prevSP = dis.readInt();
+						os.write(play.getNumCase());
+						os.flush();
+						prevSP = dis.readInt();
+					}catch(IOException e){
+						System.out.println(e);
 					}
+					pu.setPartieFinie(pu.isFinish());	
 				}	
 			}   
 		} 
@@ -100,9 +96,9 @@ public class Main
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		    System.exit(0);
-			System.err.println("Exception Serveur Java : " + e);
+		    System.err.println("Exception Serveur Java : " + e);
 			e.printStackTrace();
+			System.exit(0);
 		}
 		finally {
 			try {

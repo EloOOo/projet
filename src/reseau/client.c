@@ -89,16 +89,12 @@ int main(int argc, char **argv){
             //continue ou arrete la partie en fonction de la validation
 		    traiteReponseCoup(sock,reponseCoup);
 
-
             // Affichage de la case envoyée
             printf("Coup joué  \n");
             afficheCase(requeteCoup.pos);
             //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
-	        if(reponseCoup.propCoup == PERDU){
-	            requeteCoup = demandeCaseIA(sockJava, coupAdverse.pos,reponsePartie.symb);
-        		closeExitSocketClient(sock);
-			}
+	        
         }
 
         // 2eme joueur
@@ -106,11 +102,7 @@ int main(int argc, char **argv){
         {  
             //reception du coup adverse et de sa validation(oui/non)
             coupAdverse = recoitEtValidCoup(sock);
-         	if(reponseCoup.propCoup == PERDU){
-	            requeteCoup = demandeCaseIA(sockJava, coupAdverse.pos,reponsePartie.symb);
-        		closeExitSocketClient(sock);
-			}  
-            //demander case, enregistrer la requete, l'envoyer au serveur
+         	 //demander case, enregistrer la requete, l'envoyer au serveur
             //requeteCoup = demandeCaseUser(reponsePartie.symb);
             requeteCoup = demandeCaseIA(sockJava, coupAdverse.pos,reponsePartie.symb);
             //requeteCoup = remplieRequeteCoup(reponsePartie.symb, tc);
