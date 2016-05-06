@@ -48,10 +48,8 @@ TypCoupReq demandeCaseUser(TypSymbol symb){
     return typC;
 }
 
-int connectJava(int s) {
-    int sock, err, port;
-    
-    if(s == 1) port = 4444; else port = 5555;
+int connectJava(int port) {
+    int sock, err;
 
     //Creation de la socket client
     sock =  socketClient("127.0.0.1", port);
@@ -268,11 +266,13 @@ void traiteReponseCoup(int sock,TypCoupRep typCoupRep){
 
 void *startServeurJava(void *arg)
 {
-    int a = *((int *) arg);
-    if(a == 1) 
-        system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:../../bin/\" ia.Main 4444 0");
-    else 
-        system("java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/prologbeans.jar:../../bin/\" ia.Main 5555 1");
+    char String[255];
+    struct arg_struct *args = arg;
+    // sprintf(String, "java -classpath \"../../include/sicstus/lib/sicstus/bin/jasper.jar:../../bin/\" ia.Main %d %d",
+    // 		args->portJava, args->symb);
+    sprintf(String, "java -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar:../../bin/\" ia.Main %d %d",
+    		args->portJava, args->symb);
+    system(String);
     free(arg);
     pthread_exit(NULL);
 }

@@ -12,9 +12,14 @@
 #include "common.h"
 #include "protocoleTicTacToe.h"
 
+struct arg_struct {
+    int symb;
+    int portJava;
+};
+
 char* demandeNom();
 TypCoupReq demandeCaseUser(TypSymbol symb);
-int connectJava(int s);
+int connectJava(int port);
 TypCoupReq demandeCaseIA(int sockJava, TypCase coupPrec,TypSymbol symb);
 TypPartieReq remplieRequetePartie(char nom[MAX_CH]);
 TypCoupReq remplieRequeteCoup(TypSymbol  symb,TypCase tc);

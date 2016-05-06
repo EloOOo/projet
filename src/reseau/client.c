@@ -11,7 +11,8 @@
 
  
 int main(int argc, char **argv){
-    //system("javac -classpath \"../../include/sicstus/lib/sicstus/bin/jasper.jar:../../include/sicstus/lib/sicstus/bin/prologbeans.jar\"  -d \"../../bin/\" ../ia/*.java");
+    // system("export LD_LIBRARY_PATH=../../include/sicstus/lib/");
+    // system("javac -classpath \"../../include/sicstus/lib/sicstus/bin/jasper.jar\"  -d \"../../bin/\" ../ia/*.java");
     system("export LD_LIBRARY_PATH=/usr/local/sicstus4.3.2/lib/");
     system("javac -classpath \"/usr/local/sicstus4.3.2/lib/sicstus-4.3.2/bin/jasper.jar\" -d \"../../bin/\" ../ia/*.java");
     int sock, sockJava, symbole ,partieFinie = 0;             
@@ -22,8 +23,8 @@ int main(int argc, char **argv){
     char* nomJ;
     pthread_t thrJava;
 
-    if (argc != 4) {
-        printf("usage : client nom_machine no_port nom_joueur\n");
+    if (argc != 5) {
+        printf("usage : client nom_machine no_port nom_joueur port_Java\n");
         exit(1);
     }
 
@@ -55,18 +56,15 @@ int main(int argc, char **argv){
     afficheInfoPartie(reponsePartie);
    	
     // Lance le serveur Java automatiquement  + se connceter via la sokcet sockJava
-    int* arg = malloc(sizeof(*arg));
-    if ( arg == NULL ) {
-        fprintf(stderr, "Couldn't allocate memory for thread arg.\n");
-        exit(EXIT_FAILURE);
-    }
-    *arg = symbole;
-	pthread_create(&thrJava, NULL, (void *)startServeurJava, arg);
+    struct arg_struct args;
+    args.symb = symbole;
+    args.portJava = atoi(argv[4]);
+	pthread_create(&thrJava, NULL, (void *)startServeurJava, (void *)&args);
 	sleep(1);
 	
-	sockJava = connectJava(symbole);
+	sockJava = connectJava(args.portJava);
 
- 	while (partieFinie == 0) 
+	while (partieFinie == 0) 
     {
         memset(&requeteCoup, 0, sizeof(requeteCoup));
         //1er joueur
